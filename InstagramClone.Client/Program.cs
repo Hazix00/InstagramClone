@@ -31,7 +31,15 @@ var host = builder.Build();
 
 // Load culture from localStorage (via JS) and set it
 var js = host.Services.GetRequiredService<IJSRuntime>();
-var cultureName = await js.InvokeAsync<string?>("blazorCulture.get");
+string? cultureName = null;
+try
+{
+    cultureName = await js.InvokeAsync<string?>("blazorCulture.get");
+}
+catch
+{
+    // If JS interop isn't available yet, fall back to default
+}
 var culture = new CultureInfo(string.IsNullOrWhiteSpace(cultureName) ? "en" : cultureName);
 CultureInfo.DefaultThreadCurrentCulture = culture;
 CultureInfo.DefaultThreadCurrentUICulture = culture;

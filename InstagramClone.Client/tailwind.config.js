@@ -12,31 +12,31 @@ module.exports = {
         'instagram-gray': {
           light: '#fafafa',
           DEFAULT: '#fafafa',
-          dark: '#121212',
+          dark: '#0f172a',
         },
         'instagram-border': {
           light: '#dbdbdb',
           DEFAULT: '#dbdbdb',
-          dark: '#262626',
+          dark: '#1f2937',
         },
         'instagram-text': {
           primary: {
             light: '#262626',
-            dark: '#fafafa',
+            dark: '#e5e7eb',
           },
           secondary: {
             light: '#737373',
-            dark: '#a8a8a8',
+            dark: '#9ca3af',
           }
         },
         'instagram-bg': {
           primary: {
             light: '#ffffff',
-            dark: '#000000',
+            dark: '#111827',
           },
           secondary: {
             light: '#fafafa',
-            dark: '#121212',
+            dark: '#0f172a',
           }
         }
       },

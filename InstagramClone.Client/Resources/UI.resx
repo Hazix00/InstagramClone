@@ -147,5 +147,29 @@
   <data name="Error_NotFoundMessage" xml:space="preserve">
     <value>Sorry, there's nothing at this address.</value>
   </data>
+  <data name="Home_Welcome" xml:space="preserve">
+    <value>Instagram</value>
+  </data>
+  <data name="Home_Tagline" xml:space="preserve">
+    <value>Share moments with friends and family</value>
+  </data>
+  <data name="Home_JoinMessage" xml:space="preserve">
+    <value>Join Instagram today to share photos, connect with friends, and explore amazing content from around the world.</value>
+  </data>
+  <data name="Home_AlreadyAccount" xml:space="preserve">
+    <value>Already have an account?</value>
+  </data>
+  <data name="Home_BuiltWith" xml:space="preserve">
+    <value>A modern Instagram clone built with Blazor WebAssembly</value>
+  </data>
+  <data name="Home_LoadingFeed" xml:space="preserve">
+    <value>Loading feed...</value>
+  </data>
+  <data name="Home_NoPosts" xml:space="preserve">
+    <value>No posts yet.</value>
+  </data>
+  <data name="Home_CreateOne" xml:space="preserve">
+    <value>Create one</value>
+  </data>
 </root>
 

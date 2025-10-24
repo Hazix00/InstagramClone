@@ -22,7 +22,7 @@ namespace InstagramClone.Api.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("InstagramClone.Api.Models.Comment", b =>
+            modelBuilder.Entity("InstagramClone.Core.Entities.Comment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -47,6 +47,10 @@ namespace InstagramClone.Api.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("post_id");
 
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
                     b.Property<int>("UserId")
                         .HasColumnType("integer")
                         .HasColumnName("user_id");
@@ -62,51 +66,75 @@ namespace InstagramClone.Api.Migrations
                     b.ToTable("comments");
                 });
 
-            modelBuilder.Entity("InstagramClone.Api.Models.CommentLike", b =>
+            modelBuilder.Entity("InstagramClone.Core.Entities.CommentLike", b =>
                 {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
                     b.Property<Guid>("CommentId")
                         .HasColumnType("uuid")
                         .HasColumnName("comment_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
 
                     b.Property<int>("UserId")
                         .HasColumnType("integer")
                         .HasColumnName("user_id");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.HasKey("CommentId", "UserId");
+                    b.HasKey("Id");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("CommentId", "UserId")
+                        .IsUnique();
 
                     b.ToTable("comment_likes");
                 });
 
-            modelBuilder.Entity("InstagramClone.Api.Models.Follow", b =>
+            modelBuilder.Entity("InstagramClone.Core.Entities.Follow", b =>
                 {
-                    b.Property<int>("FollowerId")
-                        .HasColumnType("integer")
-                        .HasColumnName("follower_id");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
 
                     b.Property<int>("FolloweeId")
                         .HasColumnType("integer")
                         .HasColumnName("followee_id");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
+                    b.Property<int>("FollowerId")
+                        .HasColumnType("integer")
+                        .HasColumnName("follower_id");
 
-                    b.HasKey("FollowerId", "FolloweeId");
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("FolloweeId");
 
                     b.HasIndex("FollowerId");
 
+                    b.HasIndex("FollowerId", "FolloweeId")
+                        .IsUnique();
+
                     b.ToTable("follows");
                 });
 
-            modelBuilder.Entity("InstagramClone.Api.Models.Post", b =>
+            modelBuilder.Entity("InstagramClone.Core.Entities.Post", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -128,6 +156,10 @@ namespace InstagramClone.Api.Migrations
                         .HasColumnType("character varying(2048)")
                         .HasColumnName("image_url");
 
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
                     b.Property<int>("UserId")
                         .HasColumnType("integer")
                         .HasColumnName("user_id");
@@ -139,28 +171,40 @@ namespace InstagramClone.Api.Migrations
                     b.ToTable("posts");
                 });
 
-            modelBuilder.Entity("InstagramClone.Api.Models.PostLike", b =>
+            modelBuilder.Entity("InstagramClone.Core.Entities.PostLike", b =>
                 {
-                    b.Property<Guid>("PostId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("post_id");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer")
-                        .HasColumnName("user_id");
+                        .HasColumnName("id");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.HasKey("PostId", "UserId");
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("post_id");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("PostId", "UserId")
+                        .IsUnique();
 
                     b.ToTable("post_likes");
                 });
 
-            modelBuilder.Entity("InstagramClone.Api.Models.User", b =>
+            modelBuilder.Entity("InstagramClone.Core.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -232,20 +276,20 @@ namespace InstagramClone.Api.Migrations
                     b.ToTable("users");
                 });
 
-            modelBuilder.Entity("InstagramClone.Api.Models.Comment", b =>
+            modelBuilder.Entity("InstagramClone.Core.Entities.Comment", b =>
                 {
-                    b.HasOne("InstagramClone.Api.Models.Comment", "ParentComment")
+                    b.HasOne("InstagramClone.Core.Entities.Comment", "ParentComment")
                         .WithMany("Replies")
                         .HasForeignKey("ParentCommentId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("InstagramClone.Api.Models.Post", "Post")
+                    b.HasOne("InstagramClone.Core.Entities.Post", "Post")
                         .WithMany()
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("InstagramClone.Api.Models.User", "User")
+                    b.HasOne("InstagramClone.Core.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -258,15 +302,15 @@ namespace InstagramClone.Api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("InstagramClone.Api.Models.CommentLike", b =>
+            modelBuilder.Entity("InstagramClone.Core.Entities.CommentLike", b =>
                 {
-                    b.HasOne("InstagramClone.Api.Models.Comment", "Comment")
+                    b.HasOne("InstagramClone.Core.Entities.Comment", "Comment")
                         .WithMany()
                         .HasForeignKey("CommentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("InstagramClone.Api.Models.User", "User")
+                    b.HasOne("InstagramClone.Core.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -277,15 +321,15 @@ namespace InstagramClone.Api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("InstagramClone.Api.Models.Follow", b =>
+            modelBuilder.Entity("InstagramClone.Core.Entities.Follow", b =>
                 {
-                    b.HasOne("InstagramClone.Api.Models.User", "Followee")
+                    b.HasOne("InstagramClone.Core.Entities.User", "Followee")
                         .WithMany()
                         .HasForeignKey("FolloweeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("InstagramClone.Api.Models.User", "Follower")
+                    b.HasOne("InstagramClone.Core.Entities.User", "Follower")
                         .WithMany()
                         .HasForeignKey("FollowerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -296,9 +340,9 @@ namespace InstagramClone.Api.Migrations
                     b.Navigation("Follower");
                 });
 
-            modelBuilder.Entity("InstagramClone.Api.Models.Post", b =>
+            modelBuilder.Entity("InstagramClone.Core.Entities.Post", b =>
                 {
-                    b.HasOne("InstagramClone.Api.Models.User", "User")
+                    b.HasOne("InstagramClone.Core.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -307,15 +351,15 @@ namespace InstagramClone.Api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("InstagramClone.Api.Models.PostLike", b =>
+            modelBuilder.Entity("InstagramClone.Core.Entities.PostLike", b =>
                 {
-                    b.HasOne("InstagramClone.Api.Models.Post", "Post")
+                    b.HasOne("InstagramClone.Core.Entities.Post", "Post")
                         .WithMany()
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("InstagramClone.Api.Models.User", "User")
+                    b.HasOne("InstagramClone.Core.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -326,7 +370,7 @@ namespace InstagramClone.Api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("InstagramClone.Api.Models.Comment", b =>
+            modelBuilder.Entity("InstagramClone.Core.Entities.Comment", b =>
                 {
                     b.Navigation("Replies");
                 });

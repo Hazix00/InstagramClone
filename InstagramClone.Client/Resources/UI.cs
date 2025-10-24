@@ -62,6 +62,15 @@ public static class UI
     public static string Error_NotAuthorized => Get(nameof(Error_NotAuthorized), "You are not authorized to access this resource.");
     public static string Error_NotFound => Get(nameof(Error_NotFound), "Not found");
     public static string Error_NotFoundMessage => Get(nameof(Error_NotFoundMessage), "Sorry, there's nothing at this address.");
+
+    public static string Home_Welcome => Get(nameof(Home_Welcome), "Instagram");
+    public static string Home_Tagline => Get(nameof(Home_Tagline), "Share moments with friends and family");
+    public static string Home_JoinMessage => Get(nameof(Home_JoinMessage), "Join Instagram today to share photos, connect with friends, and explore amazing content from around the world.");
+    public static string Home_AlreadyAccount => Get(nameof(Home_AlreadyAccount), "Already have an account?");
+    public static string Home_BuiltWith => Get(nameof(Home_BuiltWith), "A modern Instagram clone built with Blazor WebAssembly");
+    public static string Home_LoadingFeed => Get(nameof(Home_LoadingFeed), "Loading feed...");
+    public static string Home_NoPosts => Get(nameof(Home_NoPosts), "No posts yet.");
+    public static string Home_CreateOne => Get(nameof(Home_CreateOne), "Create one");
 }
 
 

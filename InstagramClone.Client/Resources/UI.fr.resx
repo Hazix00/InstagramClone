@@ -49,5 +49,13 @@
   <data name="Error_NotAuthorized" xml:space="preserve"><value>Vous n'êtes pas autorisé à accéder à cette ressource.</value></data>
   <data name="Error_NotFound" xml:space="preserve"><value>Non trouvé</value></data>
   <data name="Error_NotFoundMessage" xml:space="preserve"><value>Désolé, il n'y a rien à cette adresse.</value></data>
+  <data name="Home_Welcome" xml:space="preserve"><value>Instagram</value></data>
+  <data name="Home_Tagline" xml:space="preserve"><value>Partagez des moments avec vos amis et votre famille</value></data>
+  <data name="Home_JoinMessage" xml:space="preserve"><value>Rejoignez Instagram aujourd'hui pour partager des photos, vous connecter avec des amis et découvrir du contenu incroyable du monde entier.</value></data>
+  <data name="Home_AlreadyAccount" xml:space="preserve"><value>Vous avez déjà un compte ?</value></data>
+  <data name="Home_BuiltWith" xml:space="preserve"><value>Un clone Instagram moderne construit avec Blazor WebAssembly</value></data>
+  <data name="Home_LoadingFeed" xml:space="preserve"><value>Chargement du fil...</value></data>
+  <data name="Home_NoPosts" xml:space="preserve"><value>Aucune publication pour le moment.</value></data>
+  <data name="Home_CreateOne" xml:space="preserve"><value>Créer une</value></data>
 </root>
 

@@ -49,5 +49,13 @@
   <data name="Error_NotAuthorized" xml:space="preserve"><value>غير مصرح لك بالوصول إلى هذا المورد.</value></data>
   <data name="Error_NotFound" xml:space="preserve"><value>غير موجود</value></data>
   <data name="Error_NotFoundMessage" xml:space="preserve"><value>عذرًا، لا يوجد شيء على هذا العنوان.</value></data>
+  <data name="Home_Welcome" xml:space="preserve"><value>إنستغرام</value></data>
+  <data name="Home_Tagline" xml:space="preserve"><value>شارك اللحظات مع الأصدقاء والعائلة</value></data>
+  <data name="Home_JoinMessage" xml:space="preserve"><value>انضم إلى إنستغرام اليوم لمشاركة الصور والتواصل مع الأصدقاء واستكشاف محتوى مذهل من جميع أنحاء العالم.</value></data>
+  <data name="Home_AlreadyAccount" xml:space="preserve"><value>هل لديك حساب بالفعل؟</value></data>
+  <data name="Home_BuiltWith" xml:space="preserve"><value>نسخة إنستغرام حديثة مبنية باستخدام Blazor WebAssembly</value></data>
+  <data name="Home_LoadingFeed" xml:space="preserve"><value>جاري تحميل الخلاصة...</value></data>
+  <data name="Home_NoPosts" xml:space="preserve"><value>لا توجد منشورات حتى الآن.</value></data>
+  <data name="Home_CreateOne" xml:space="preserve"><value>أنشئ واحدة</value></data>
 </root>
 

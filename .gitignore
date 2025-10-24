@@ -289,6 +289,9 @@ node_modules/
 package-lock.json
 yarn.lock
 
+# Tailwind CSS generated files
+**/wwwroot/css/app.css
+
 # Visual Studio 6 build log
 *.plg
 
