@@ -1,0 +1,76 @@
+﻿@page "/"
+@using System.Security.Claims
+@using InstagramClone.Core.DTOs
+
+<PageTitle>Instagram</PageTitle>
+
+<div class="min-h-screen flex items-center justify-center bg-instagram-gray py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full">
+        <AuthorizeView>
+            <Authorized>
+                @code {
+                    private List<PostDto>? feed;
+                    [Inject] public InstagramClone.Client.Services.PostService PostService { get; set; } = default!;
+
+                    protected override async Task OnInitializedAsync()
+                    {
+                        feed = await PostService.GetFeedAsync() ?? new();
+                    }
+                }
+                @* Feed *@
+                @if (feed == null)
+                {
+                    <div class="text-center text-gray-600">Loading feed...</div>
+                }
+                else if (feed.Count == 0)
+                {
+                    <div class="text-center text-gray-600">
+                        No posts yet.
+                        <a class="instagram-link" href="/new-post">Create one</a>
+                    </div>
+                }
+                else
+                {
+                    <div class="max-w-xl mx-auto space-y-6">
+                        @foreach (var p in feed)
+                        {
+                            <div class="bg-white border border-instagram-border rounded-sm">
+                                <div class="px-4 py-3 font-semibold">@p.Username</div>
+                                <img src="@p.ImageUrl" alt="post" class="w-full" />
+                                @if (!string.IsNullOrWhiteSpace(p.Caption))
+                                {
+                                    <div class="px-4 py-3 text-sm"><span class="font-semibold">@p.Username</span> @p.Caption</div>
+                                }
+                                <div class="px-4 py-2 text-xs text-gray-500">@p.CreatedAt.ToLocalTime().ToString("g")</div>
+                            </div>
+                        }
+                    </div>
+                }
+            </Authorized>
+            <NotAuthorized>
+                <div class="text-center">
+                    <h1 class="text-5xl font-bold mb-2 bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 bg-clip-text text-transparent">
+                        Instagram
+                    </h1>
+                    <p class="text-gray-600 mb-8 text-lg">Share moments with friends and family</p>
+                    
+                    <div class="bg-white rounded-lg shadow-md p-8 border border-instagram-border mb-4">
+                        <p class="text-gray-700 mb-6">
+                            Join Instagram today to share photos, connect with friends, and explore amazing content from around the world.
+                        </p>
+                        <a href="/register" class="block w-full py-2 px-4 bg-instagram-blue text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors mb-3">
+                            Sign Up
+                        </a>
+                        <p class="text-sm text-gray-600">
+                            Already have an account? <a href="/login" class="instagram-link">Log in</a>
+                        </p>
+                    </div>
+                    
+                    <div class="text-center text-sm text-gray-500">
+                        <p>A modern Instagram clone built with Blazor WebAssembly</p>
+                    </div>
+                </div>
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+</div>

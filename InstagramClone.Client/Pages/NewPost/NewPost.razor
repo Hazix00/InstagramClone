@@ -1,0 +1,49 @@
+@page "/new-post"
+@using InstagramClone.Core.DTOs
+@inject InstagramClone.Client.Services.PostService PostService
+@inject NavigationManager Nav
+
+<PageTitle>New Post • Instagram</PageTitle>
+
+<div class="min-h-screen bg-instagram-gray py-8">
+    <div class="max-w-md mx-auto bg-white border border-instagram-border rounded-sm p-6">
+        <h2 class="text-xl font-semibold mb-4">Create Post</h2>
+
+        @if (!string.IsNullOrEmpty(error)) {
+            <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-2 rounded mb-3 text-sm">@error</div>
+        }
+
+        <EditForm Model="@model" OnValidSubmit="@HandleSubmit">
+            <DataAnnotationsValidator />
+
+            <div class="mb-4">
+                <InputText class="w-full px-3 py-2 border border-instagram-border rounded-sm"
+                           @bind-Value="model.ImageUrl" placeholder="Image URL" />
+                <ValidationMessage For="@(() => model.ImageUrl)" class="text-red-500 text-xs mt-1" />
+            </div>
+
+            <div class="mb-4">
+                <InputTextArea class="w-full px-3 py-2 border border-instagram-border rounded-sm"
+                               @bind-Value="model.Caption" placeholder="Caption..." />
+            </div>
+
+            <button type="submit" class="px-4 py-2 bg-instagram-blue text-white rounded">Share</button>
+            <a href="/" class="ml-3 text-sm">Cancel</a>
+        </EditForm>
+    </div>
+    </div>
+
+@code {
+    private CreatePostRequest model = new();
+    private string? error;
+
+    private async Task HandleSubmit()
+    {
+        error = null;
+        var ok = await PostService.CreateAsync(model);
+        if (ok) Nav.NavigateTo("/");
+        else error = "Failed to create post.";
+    }
+}
+
+

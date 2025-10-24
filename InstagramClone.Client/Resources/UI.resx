@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Login_Title" xml:space="preserve">
+    <value>Login • Instagram</value>
+  </data>
+  <data name="Login_UsernameOrEmail" xml:space="preserve">
+    <value>Username, or email</value>
+  </data>
+  <data name="Login_Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Login_Submit" xml:space="preserve">
+    <value>Log in</value>
+  </data>
+  <data name="Login_Submitting" xml:space="preserve">
+    <value>Logging in...</value>
+  </data>
+  <data name="Common_Or" xml:space="preserve">
+    <value>OR</value>
+  </data>
+  <data name="Login_Forgot" xml:space="preserve">
+    <value>Forgot password?</value>
+  </data>
+  <data name="Login_SignupPrompt" xml:space="preserve">
+    <value>Don't have an account?</value>
+  </data>
+  <data name="Common_Signup" xml:space="preserve">
+    <value>Sign up</value>
+  </data>
+  <data name="Common_Login" xml:space="preserve">
+    <value>Log in</value>
+  </data>
+  <data name="Footer_Copyright" xml:space="preserve">
+    <value>© 2024 Instagram Clone</value>
+  </data>
+  <data name="Register_Title" xml:space="preserve">
+    <value>Sign up • Instagram</value>
+  </data>
+  <data name="Register_Subtitle" xml:space="preserve">
+    <value>Sign up to see photos and videos from your friends.</value>
+  </data>
+  <data name="Common_Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Common_Username" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="Common_Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Register_ConfirmPassword" xml:space="preserve">
+    <value>Confirm Password</value>
+  </data>
+  <data name="Register_Submitting" xml:space="preserve">
+    <value>Signing up...</value>
+  </data>
+  <data name="Register_HaveAccount" xml:space="preserve">
+    <value>Have an account?</value>
+  </data>
+  <data name="Forgot_Title" xml:space="preserve">
+    <value>Reset Password • Instagram</value>
+  </data>
+  <data name="Forgot_Heading" xml:space="preserve">
+    <value>Trouble logging in?</value>
+  </data>
+  <data name="Forgot_Instruction" xml:space="preserve">
+    <value>Enter your email and we'll send you a link to get back into your account.</value>
+  </data>
+  <data name="Common_Sending" xml:space="preserve">
+    <value>Sending...</value>
+  </data>
+  <data name="Forgot_SendLink" xml:space="preserve">
+    <value>Send login link</value>
+  </data>
+  <data name="Common_CreateAccount" xml:space="preserve">
+    <value>Create new account</value>
+  </data>
+  <data name="Common_BackToLogin" xml:space="preserve">
+    <value>Back to login</value>
+  </data>
+  <data name="Verify_Title" xml:space="preserve">
+    <value>Verify Email • Instagram</value>
+  </data>
+  <data name="Verify_Heading" xml:space="preserve">
+    <value>Verify your email</value>
+  </data>
+  <data name="Verify_Instruction" xml:space="preserve">
+    <value>Enter your email and verification code to verify your account.</value>
+  </data>
+  <data name="Verify_CodePlaceholder" xml:space="preserve">
+    <value>Verification code</value>
+  </data>
+  <data name="Verify_Submitting" xml:space="preserve">
+    <value>Verifying...</value>
+  </data>
+  <data name="Verify_Submit" xml:space="preserve">
+    <value>Verify email</value>
+  </data>
+  <data name="Verify_Resend" xml:space="preserve">
+    <value>Resend verification email</value>
+  </data>
+  <data name="Common_EmailNotVerified" xml:space="preserve">
+    <value>⚠ Your email is not verified</value>
+  </data>
+  <data name="Settings_Title" xml:space="preserve">
+    <value>Edit Profile • Instagram</value>
+  </data>
+  <data name="Settings_EditProfile" xml:space="preserve">
+    <value>Edit Profile</value>
+  </data>
+  <data name="Settings_ChangePassword" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="Settings_ChangePhoto" xml:space="preserve">
+    <value>Change profile photo</value>
+  </data>
+  <data name="Settings_UsernameHint" xml:space="preserve">
+    <value>In most cases, you'll be able to change your username back for another 14 days.</value>
+  </data>
+  <data name="Common_Submit" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="Common_Saving" xml:space="preserve">
+    <value>Saving...</value>
+  </data>
+  <data name="Common_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Error_NotAuthorized" xml:space="preserve">
+    <value>You are not authorized to access this resource.</value>
+  </data>
+  <data name="Error_NotFound" xml:space="preserve">
+    <value>Not found</value>
+  </data>
+  <data name="Error_NotFoundMessage" xml:space="preserve">
+    <value>Sorry, there's nothing at this address.</value>
+  </data>
+</root>
+

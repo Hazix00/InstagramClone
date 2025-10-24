@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Instagram</title>
+    <base href="/" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/app.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link href="InstagramClone.Client.styles.css" rel="stylesheet" />
+    <script>
+        // Culture persistence and RTL/LTR handling
+        window.blazorCulture = {
+            key: 'culture',
+            get: function () { return localStorage.getItem(this.key); },
+            set: function (value) { localStorage.setItem(this.key, value); },
+            apply: function (value) {
+                var lang = value || this.get() || 'en';
+                document.documentElement.lang = lang;
+                document.documentElement.dir = lang && lang.toLowerCase().startsWith('ar') ? 'rtl' : 'ltr';
+            }
+        };
+        // Apply as early as possible to avoid FOUC
+        window.blazorCulture.apply();
+
+        // Theme management
+        window.themeManager = {
+            key: 'theme',
+            get: function () {
+                var saved = localStorage.getItem(this.key);
+                if (saved) return saved;
+                // Default to system preference if no saved theme
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            },
+            set: function (theme) {
+                localStorage.setItem(this.key, theme);
+                this.apply(theme);
+            },
+            apply: function (theme) {
+                var themeToUse = theme || this.get();
+                if (themeToUse === 'dark') {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            },
+            toggle: function () {
+                var current = this.get();
+                var newTheme = current === 'dark' ? 'light' : 'dark';
+                this.set(newTheme);
+                return newTheme;
+            }
+        };
+        // Apply theme as early as possible to avoid FOUC
+        window.themeManager.apply();
+    </script>
+</head>
+
+<body class="bg-white dark:bg-black">
+    <div id="app" class="min-h-screen">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-instagram-blue"></div>
+        </div>
+    </div>
+
+    <div id="blazor-error-ui" class="fixed bottom-0 left-0 right-0 bg-red-600 text-white p-4 z-50">
+        An unhandled error has occurred.
+        <a href="." class="underline ml-2 reload">Reload</a>
+        <button class="ml-4 text-xl dismiss">×</button>
+    </div>
+    <script src="_framework/blazor.webassembly.js"></script>
+</body>
+
+</html>

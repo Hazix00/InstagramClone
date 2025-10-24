@@ -1,0 +1,88 @@
+@page "/login"
+
+<PageTitle>@UI.Login_Title</PageTitle>
+
+<div class="min-h-screen flex items-center justify-center bg-instagram-gray dark:bg-instagram-gray-dark py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-3">
+        <!-- Main Card -->
+        <div class="bg-white dark:bg-black rounded-sm border border-instagram-border dark:border-instagram-border-dark p-10">
+            <!-- Instagram Logo -->
+            <div class="text-center mb-8">
+                <h1 class="text-5xl font-semibold mb-2 text-gray-900 dark:text-white" style="font-family: 'Billabong', cursive;">Instagram</h1>
+            </div>
+
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded mb-4 text-sm">
+                    @ErrorMessage
+                </div>
+            }
+
+            <EditForm Model="@LoginRequestModel" OnValidSubmit="@HandleLogin">
+                <DataAnnotationsValidator />
+
+                <div class="space-y-3">
+                    <div>
+                        <InputText 
+                            id="username" 
+                            class="w-full px-2 py-2 text-xs border border-instagram-border dark:border-instagram-border-dark rounded-sm bg-instagram-gray dark:bg-instagram-gray-dark text-gray-900 dark:text-white focus:outline-none focus:border-gray-400 dark:focus:border-gray-600" 
+                            @bind-Value="LoginRequestModel.Username" 
+                            placeholder="@UI.Login_UsernameOrEmail" 
+                            autocomplete="username" />
+                        <ValidationMessage For="@(() => LoginRequestModel.Username)" class="text-red-500 dark:text-red-400 text-xs mt-1" />
+                    </div>
+
+                    <div>
+                        <InputText 
+                            id="password" 
+                            type="password" 
+                            class="w-full px-2 py-2 text-xs border border-instagram-border dark:border-instagram-border-dark rounded-sm bg-instagram-gray dark:bg-instagram-gray-dark text-gray-900 dark:text-white focus:outline-none focus:border-gray-400 dark:focus:border-gray-600" 
+                            @bind-Value="LoginRequestModel.Password" 
+                            placeholder="@UI.Login_Password" 
+                            autocomplete="current-password" />
+                        <ValidationMessage For="@(() => LoginRequestModel.Password)" class="text-red-500 dark:text-red-400 text-xs mt-1" />
+                    </div>
+
+                    <button 
+                        type="submit" 
+                        class="w-full py-1.5 px-4 bg-instagram-blue text-white text-sm font-semibold rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled="@IsLoading">
+                        @if (IsLoading)
+                        {
+                            <span>@UI.Login_Submitting</span>
+                        }
+                        else
+                        {
+                            <span>@UI.Login_Submit</span>
+                        }
+                    </button>
+                </div>
+            </EditForm>
+
+            <!-- Divider -->
+            <div class="flex items-center my-6">
+                <div class="flex-1 border-b border-instagram-border dark:border-instagram-border-dark"></div>
+                <span class="px-4 text-xs text-gray-500 dark:text-gray-400 font-semibold">@UI.Common_Or</span>
+                <div class="flex-1 border-b border-instagram-border dark:border-instagram-border-dark"></div>
+            </div>
+
+            <!-- Forgot Password Link -->
+            <div class="text-center">
+                <a href="/forgot-password" class="text-xs text-blue-900 dark:text-blue-400">@UI.Login_Forgot</a>
+            </div>
+        </div>
+
+        <!-- Sign Up Card -->
+        <div class="bg-white dark:bg-black rounded-sm border border-instagram-border dark:border-instagram-border-dark p-6 text-center">
+            <p class="text-sm text-gray-900 dark:text-white">
+                @UI.Login_SignupPrompt <a href="/register" class="text-instagram-blue font-semibold">@UI.Common_Signup</a>
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center text-xs text-gray-500 dark:text-gray-400 mt-4">
+            <p>@UI.Footer_Copyright</p>
+        </div>
+    </div>
+</div>
+

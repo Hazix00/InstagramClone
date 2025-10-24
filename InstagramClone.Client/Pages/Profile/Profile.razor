@@ -1,0 +1,86 @@
+@page "/profile"
+@attribute [Authorize]
+
+<PageTitle>Profile • Instagram</PageTitle>
+
+<div class="min-h-screen bg-instagram-gray py-8">
+    <div class="max-w-4xl mx-auto px-4">
+        @if (IsLoading)
+        {
+            <div class="flex justify-center items-center h-64">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-instagram-blue"></div>
+            </div>
+        }
+        else if (ErrorMessage != null)
+        {
+            <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
+                @ErrorMessage
+            </div>
+        }
+        else if (UserProfile != null)
+        {
+            <div class="bg-white border border-instagram-border rounded-sm">
+                <!-- Profile Header -->
+                <div class="p-8 border-b border-instagram-border">
+                    <div class="flex items-center space-x-8">
+                        <!-- Profile Picture -->
+                        <div class="w-32 h-32 bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                            <div class="w-28 h-28 bg-white rounded-full flex items-center justify-center">
+                                <span class="text-6xl">👤</span>
+                            </div>
+                        </div>
+
+                        <!-- Profile Info -->
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-4 mb-4">
+                                <h1 class="text-2xl font-light">@UserProfile.Username</h1>
+                                <a href="/settings" class="px-4 py-1 border border-instagram-border rounded text-sm font-semibold hover:bg-instagram-gray">
+                                    Edit profile
+                                </a>
+                            </div>
+
+                            <div class="flex space-x-8 mb-4">
+                                <div><span class="font-semibold">0</span> posts</div>
+                                <div><span class="font-semibold">0</span> followers</div>
+                                <div><span class="font-semibold">0</span> following</div>
+                            </div>
+
+                            <div>
+                                <p class="text-sm text-gray-600">@UserProfile.Email</p>
+                                @if (UserProfile.IsEmailVerified)
+                                {
+                                    <p class="text-xs text-green-600 mt-1">✓ Email verified</p>
+                                }
+                                else
+                                {
+                                    <p class="text-xs text-orange-600 mt-1">⚠ Email not verified</p>
+                                }
+                                <p class="text-xs text-gray-500 mt-2">Member since @UserProfile.CreatedAt.ToString("MMMM yyyy")</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Posts Section -->
+                <div class="p-8">
+                    @if (MyPosts.Count == 0)
+                    {
+                        <div class="text-center text-gray-500">You haven't posted yet. <a href="/new-post" class="instagram-link">Create your first post</a></div>
+                    }
+                    else
+                    {
+                        <div class="grid grid-cols-3 gap-2">
+                            @foreach (var p in MyPosts)
+                            {
+                                <a href="@p.ImageUrl" target="_blank" class="block">
+                                    <img src="@p.ImageUrl" alt="post" class="w-full h-48 object-cover" />
+                                </a>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

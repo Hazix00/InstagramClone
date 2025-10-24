@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Login_Title" xml:space="preserve"><value>Connexion • Instagram</value></data>
+  <data name="Login_UsernameOrEmail" xml:space="preserve"><value>Nom d'utilisateur ou e-mail</value></data>
+  <data name="Login_Password" xml:space="preserve"><value>Mot de passe</value></data>
+  <data name="Login_Submit" xml:space="preserve"><value>Se connecter</value></data>
+  <data name="Login_Submitting" xml:space="preserve"><value>Connexion...</value></data>
+  <data name="Common_Or" xml:space="preserve"><value>OU</value></data>
+  <data name="Login_Forgot" xml:space="preserve"><value>Mot de passe oublié ?</value></data>
+  <data name="Login_SignupPrompt" xml:space="preserve"><value>Vous n'avez pas de compte ?</value></data>
+  <data name="Common_Signup" xml:space="preserve"><value>S'inscrire</value></data>
+  <data name="Common_Login" xml:space="preserve"><value>Se connecter</value></data>
+  <data name="Footer_Copyright" xml:space="preserve"><value>© 2024 Instagram Clone</value></data>
+  <data name="Register_Title" xml:space="preserve"><value>Inscription • Instagram</value></data>
+  <data name="Register_Subtitle" xml:space="preserve"><value>Inscrivez-vous pour voir les photos et vidéos de vos amis.</value></data>
+  <data name="Common_Email" xml:space="preserve"><value>E-mail</value></data>
+  <data name="Common_Username" xml:space="preserve"><value>Nom d'utilisateur</value></data>
+  <data name="Common_Password" xml:space="preserve"><value>Mot de passe</value></data>
+  <data name="Register_ConfirmPassword" xml:space="preserve"><value>Confirmer le mot de passe</value></data>
+  <data name="Register_Submitting" xml:space="preserve"><value>Inscription...</value></data>
+  <data name="Register_HaveAccount" xml:space="preserve"><value>Vous avez un compte ?</value></data>
+  <data name="Forgot_Title" xml:space="preserve"><value>Réinitialiser le mot de passe • Instagram</value></data>
+  <data name="Forgot_Heading" xml:space="preserve"><value>Problèmes de connexion ?</value></data>
+  <data name="Forgot_Instruction" xml:space="preserve"><value>Entrez votre e-mail et nous vous enverrons un lien pour récupérer votre compte.</value></data>
+  <data name="Common_Sending" xml:space="preserve"><value>Envoi...</value></data>
+  <data name="Forgot_SendLink" xml:space="preserve"><value>Envoyer le lien de connexion</value></data>
+  <data name="Common_CreateAccount" xml:space="preserve"><value>Créer un nouveau compte</value></data>
+  <data name="Common_BackToLogin" xml:space="preserve"><value>Retour à la connexion</value></data>
+  <data name="Verify_Title" xml:space="preserve"><value>Vérifier l'e-mail • Instagram</value></data>
+  <data name="Verify_Heading" xml:space="preserve"><value>Vérifiez votre e-mail</value></data>
+  <data name="Verify_Instruction" xml:space="preserve"><value>Entrez votre e-mail et le code de vérification pour confirmer votre compte.</value></data>
+  <data name="Verify_CodePlaceholder" xml:space="preserve"><value>Code de vérification</value></data>
+  <data name="Verify_Submitting" xml:space="preserve"><value>Vérification...</value></data>
+  <data name="Verify_Submit" xml:space="preserve"><value>Vérifier l'e-mail</value></data>
+  <data name="Verify_Resend" xml:space="preserve"><value>Renvoyer l'e-mail de vérification</value></data>
+  <data name="Common_EmailNotVerified" xml:space="preserve"><value>⚠ Votre e-mail n'est pas vérifié</value></data>
+  <data name="Settings_Title" xml:space="preserve"><value>Modifier le profil • Instagram</value></data>
+  <data name="Settings_EditProfile" xml:space="preserve"><value>Modifier le profil</value></data>
+  <data name="Settings_ChangePassword" xml:space="preserve"><value>Changer le mot de passe</value></data>
+  <data name="Settings_ChangePhoto" xml:space="preserve"><value>Changer la photo de profil</value></data>
+  <data name="Settings_UsernameHint" xml:space="preserve"><value>Dans la plupart des cas, vous pourrez revenir à votre ancien nom d'utilisateur pendant 14 jours.</value></data>
+  <data name="Common_Submit" xml:space="preserve"><value>Envoyer</value></data>
+  <data name="Common_Saving" xml:space="preserve"><value>Enregistrement...</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>Annuler</value></data>
+  <data name="Error_NotAuthorized" xml:space="preserve"><value>Vous n'êtes pas autorisé à accéder à cette ressource.</value></data>
+  <data name="Error_NotFound" xml:space="preserve"><value>Non trouvé</value></data>
+  <data name="Error_NotFoundMessage" xml:space="preserve"><value>Désolé, il n'y a rien à cette adresse.</value></data>
+</root>
+

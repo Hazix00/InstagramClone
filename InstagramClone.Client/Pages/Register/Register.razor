@@ -1,0 +1,108 @@
+@page "/register"
+
+<PageTitle>@UI.Register_Title</PageTitle>
+
+<div class="min-h-screen flex items-center justify-center bg-instagram-gray py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-3">
+        <!-- Main Card -->
+        <div class="bg-white rounded-sm border border-instagram-border p-10">
+            <!-- Instagram Logo -->
+            <div class="text-center mb-4">
+                <h1 class="text-5xl font-semibold mb-4" style="font-family: 'Billabong', cursive;">Instagram</h1>
+                <p class="text-gray-500 font-semibold text-base px-8">@UI.Register_Subtitle</p>
+            </div>
+
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded mb-4 text-sm">
+                    @ErrorMessage
+                </div>
+            }
+
+            <EditForm Model="@RegisterRequestModel" OnValidSubmit="@HandleRegister">
+                <DataAnnotationsValidator />
+
+                <div class="space-y-2 mt-6">
+                    <div>
+                        <InputText 
+                            id="email" 
+                            type="email" 
+                            class="w-full px-2 py-2 text-xs border border-instagram-border rounded-sm bg-instagram-gray focus:outline-none focus:border-gray-400" 
+                            @bind-Value="RegisterRequestModel.Email" 
+                            placeholder="@UI.Common_Email" 
+                            autocomplete="email" />
+                        <ValidationMessage For="@(() => RegisterRequestModel.Email)" class="text-red-500 text-xs mt-1" />
+                    </div>
+
+                    <div>
+                        <InputText 
+                            id="username" 
+                            class="w-full px-2 py-2 text-xs border border-instagram-border rounded-sm bg-instagram-gray focus:outline-none focus:border-gray-400" 
+                            @bind-Value="RegisterRequestModel.Username" 
+                            placeholder="@UI.Common_Username" 
+                            autocomplete="username" />
+                        <ValidationMessage For="@(() => RegisterRequestModel.Username)" class="text-red-500 text-xs mt-1" />
+                    </div>
+
+                    <div>
+                        <InputText 
+                            id="password" 
+                            type="password" 
+                            class="w-full px-2 py-2 text-xs border border-instagram-border rounded-sm bg-instagram-gray focus:outline-none focus:border-gray-400" 
+                            @bind-Value="RegisterRequestModel.Password" 
+                            placeholder="@UI.Common_Password" 
+                            autocomplete="new-password" />
+                        <ValidationMessage For="@(() => RegisterRequestModel.Password)" class="text-red-500 text-xs mt-1" />
+                    </div>
+
+                    <div>
+                        <InputText 
+                            id="confirmPassword" 
+                            type="password" 
+                            class="w-full px-2 py-2 text-xs border border-instagram-border rounded-sm bg-instagram-gray focus:outline-none focus:border-gray-400" 
+                            @bind-Value="RegisterRequestModel.ConfirmPassword" 
+                            placeholder="@UI.Register_ConfirmPassword" 
+                            autocomplete="new-password" />
+                        <ValidationMessage For="@(() => RegisterRequestModel.ConfirmPassword)" class="text-red-500 text-xs mt-1" />
+                    </div>
+
+                    <div class="pt-2">
+                        <p class="text-xs text-gray-500 text-center mb-3">
+                            People who use our service may have uploaded your contact information to Instagram.
+                        </p>
+                        <p class="text-xs text-gray-500 text-center mb-4">
+                            By signing up, you agree to our Terms , Privacy Policy and Cookies Policy.
+                        </p>
+                    </div>
+
+                    <button 
+                        type="submit" 
+                        class="w-full py-1.5 px-4 bg-instagram-blue text-white text-sm font-semibold rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled="@IsLoading">
+                        @if (IsLoading)
+                        {
+                            <span>@UI.Register_Submitting</span>
+                        }
+                        else
+                        {
+                            <span>@UI.Common_Signup</span>
+                        }
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+
+        <!-- Login Card -->
+        <div class="bg-white rounded-sm border border-instagram-border p-6 text-center">
+            <p class="text-sm">
+                @UI.Register_HaveAccount <a href="/login" class="text-instagram-blue font-semibold">@UI.Common_Login</a>
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center text-xs text-gray-500 mt-4">
+            <p>@UI.Footer_Copyright</p>
+        </div>
+    </div>
+</div>
+

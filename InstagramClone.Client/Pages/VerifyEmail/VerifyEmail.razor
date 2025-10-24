@@ -1,0 +1,112 @@
+@page "/verify-email"
+
+<PageTitle>@UI.Verify_Title</PageTitle>
+
+<div class="min-h-screen flex items-center justify-center bg-instagram-gray py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-3">
+        <!-- Main Card -->
+        <div class="bg-white rounded-sm border border-instagram-border p-10">
+            <div class="text-center mb-6">
+                <!-- Email Icon -->
+                <div class="mx-auto w-24 h-24 border-2 border-black rounded-full flex items-center justify-center mb-4">
+                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+                <h2 class="text-base font-semibold mb-2">@UI.Verify_Heading</h2>
+                <p class="text-sm text-gray-500">
+                    @UI.Verify_Instruction
+                </p>
+            </div>
+
+            @if (!string.IsNullOrEmpty(SuccessMessage))
+            {
+                <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded mb-4 text-sm">
+                    @SuccessMessage
+                    <div class="mt-2">
+                        <a href="/login" class="instagram-link">@UI.Common_Login</a>
+                    </div>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded mb-4 text-sm">
+                    @ErrorMessage
+                </div>
+            }
+
+            @if (string.IsNullOrEmpty(SuccessMessage))
+            {
+                <EditForm Model="@VerifyModel" OnValidSubmit="@HandleVerifyEmail">
+                    <DataAnnotationsValidator />
+
+                    <div class="space-y-3">
+                        <div>
+                            <InputText 
+                                id="email" 
+                                type="email" 
+                                class="w-full px-2 py-2 text-xs border border-instagram-border rounded-sm bg-instagram-gray focus:outline-none focus:border-gray-400" 
+                                @bind-Value="VerifyModel.Email" 
+                                placeholder="@UI.Common_Email" 
+                                autocomplete="email" />
+                            <ValidationMessage For="@(() => VerifyModel.Email)" class="text-red-500 text-xs mt-1" />
+                        </div>
+
+                        <div>
+                            <InputText 
+                                id="token" 
+                                class="w-full px-2 py-2 text-xs border border-instagram-border rounded-sm bg-instagram-gray focus:outline-none focus:border-gray-400" 
+                                @bind-Value="VerifyModel.Token" 
+                                placeholder="@UI.Verify_CodePlaceholder" />
+                            <ValidationMessage For="@(() => VerifyModel.Token)" class="text-red-500 text-xs mt-1" />
+                        </div>
+
+                        <button 
+                            type="submit" 
+                            class="w-full py-1.5 px-4 bg-instagram-blue text-white text-sm font-semibold rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled="@IsLoading">
+                            @if (IsLoading)
+                            {
+                                <span>@UI.Verify_Submitting</span>
+                            }
+                            else
+                            {
+                                <span>@UI.Verify_Submit</span>
+                            }
+                        </button>
+                    </div>
+                </EditForm>
+
+                <!-- Divider -->
+                <div class="flex items-center my-6">
+                    <div class="flex-1 border-b border-instagram-border"></div>
+                    <span class="px-4 text-xs text-gray-500 font-semibold">@UI.Common_Or</span>
+                    <div class="flex-1 border-b border-instagram-border"></div>
+                </div>
+
+                <div class="text-center">
+                    <button 
+                        @onclick="ResendVerification" 
+                        class="text-sm instagram-link" 
+                        disabled="@IsResending">
+                        @if (IsResending)
+                        {
+                            <span>@UI.Common_Sending</span>
+                        }
+                        else
+                        {
+                            <span>@UI.Verify_Resend</span>
+                        }
+                    </button>
+                </div>
+            }
+        </div>
+
+        <!-- Back to Login Card -->
+        <div class="bg-white rounded-sm border border-instagram-border p-4 text-center">
+            <a href="/login" class="text-sm font-semibold">@UI.Common_BackToLogin</a>
+        </div>
+    </div>
+</div>
+

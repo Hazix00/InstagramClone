@@ -1,0 +1,66 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug API",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "Run API",
+      "program": "${workspaceFolder}/InstagramClone.Api/bin/Debug/net9.0/InstagramClone.Api.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/InstagramClone.Api",
+      "console": "internalConsole",
+      "stopAtEntry": false,
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    {
+      "name": "Debug Client",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "Run Client",
+      "program": "${workspaceFolder}/InstagramClone.Client/bin/Debug/net9.0/InstagramClone.Client.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/InstagramClone.Client",
+      "console": "internalConsole",
+      "stopAtEntry": false,
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    {
+      "name": "Attach API (.NET)",
+      "type": "coreclr",
+      "request": "attach",
+      "processId": "${command:pickProcess}"
+    },
+    {
+      "name": "Launch Client (Chrome)",
+      "type": "pwa-chrome",
+      "request": "launch",
+      "url": "https://localhost:7111",
+      "webRoot": "${workspaceFolder}/InstagramClone.Client/wwwroot"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debug All",
+      "configurations": [
+        "Debug API",
+        "Debug Client"
+      ],
+      "preLaunchTask": "Run All",
+      "stopAll": true
+    },
+    {
+      "name": "Debug All (watch)",
+      "configurations": [
+        "Attach API (.NET)",
+        "Launch Client (Chrome)"
+      ],
+      "preLaunchTask": "Run All (watch)",
+      "stopAll": true
+    }
+  ]
+}

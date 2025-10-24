@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Login_Title" xml:space="preserve"><value>تسجيل الدخول • إنستغرام</value></data>
+  <data name="Login_UsernameOrEmail" xml:space="preserve"><value>اسم المستخدم أو البريد الإلكتروني</value></data>
+  <data name="Login_Password" xml:space="preserve"><value>كلمة المرور</value></data>
+  <data name="Login_Submit" xml:space="preserve"><value>تسجيل الدخول</value></data>
+  <data name="Login_Submitting" xml:space="preserve"><value>جاري تسجيل الدخول...</value></data>
+  <data name="Common_Or" xml:space="preserve"><value>أو</value></data>
+  <data name="Login_Forgot" xml:space="preserve"><value>هل نسيت كلمة المرور؟</value></data>
+  <data name="Login_SignupPrompt" xml:space="preserve"><value>ليس لديك حساب؟</value></data>
+  <data name="Common_Signup" xml:space="preserve"><value>إنشاء حساب</value></data>
+  <data name="Common_Login" xml:space="preserve"><value>تسجيل الدخول</value></data>
+  <data name="Footer_Copyright" xml:space="preserve"><value>© 2024 نسخة إنستغرام</value></data>
+  <data name="Register_Title" xml:space="preserve"><value>إنشاء حساب • إنستغرام</value></data>
+  <data name="Register_Subtitle" xml:space="preserve"><value>سجّل لرؤية الصور ومقاطع الفيديو من أصدقائك.</value></data>
+  <data name="Common_Email" xml:space="preserve"><value>البريد الإلكتروني</value></data>
+  <data name="Common_Username" xml:space="preserve"><value>اسم المستخدم</value></data>
+  <data name="Common_Password" xml:space="preserve"><value>كلمة المرور</value></data>
+  <data name="Register_ConfirmPassword" xml:space="preserve"><value>تأكيد كلمة المرور</value></data>
+  <data name="Register_Submitting" xml:space="preserve"><value>جاري التسجيل...</value></data>
+  <data name="Register_HaveAccount" xml:space="preserve"><value>هل لديك حساب؟</value></data>
+  <data name="Forgot_Title" xml:space="preserve"><value>إعادة تعيين كلمة المرور • إنستغرام</value></data>
+  <data name="Forgot_Heading" xml:space="preserve"><value>هل تواجه صعوبة في تسجيل الدخول؟</value></data>
+  <data name="Forgot_Instruction" xml:space="preserve"><value>أدخل بريدك الإلكتروني وسنرسل لك رابطًا للعودة إلى حسابك.</value></data>
+  <data name="Common_Sending" xml:space="preserve"><value>جاري الإرسال...</value></data>
+  <data name="Forgot_SendLink" xml:space="preserve"><value>إرسال رابط تسجيل الدخول</value></data>
+  <data name="Common_CreateAccount" xml:space="preserve"><value>إنشاء حساب جديد</value></data>
+  <data name="Common_BackToLogin" xml:space="preserve"><value>العودة إلى تسجيل الدخول</value></data>
+  <data name="Verify_Title" xml:space="preserve"><value>تأكيد البريد الإلكتروني • إنستغرام</value></data>
+  <data name="Verify_Heading" xml:space="preserve"><value>أكد بريدك الإلكتروني</value></data>
+  <data name="Verify_Instruction" xml:space="preserve"><value>أدخل بريدك الإلكتروني ورمز التحقق لتأكيد حسابك.</value></data>
+  <data name="Verify_CodePlaceholder" xml:space="preserve"><value>رمز التحقق</value></data>
+  <data name="Verify_Submitting" xml:space="preserve"><value>جاري التأكيد...</value></data>
+  <data name="Verify_Submit" xml:space="preserve"><value>تأكيد البريد الإلكتروني</value></data>
+  <data name="Verify_Resend" xml:space="preserve"><value>إعادة إرسال رسالة التحقق</value></data>
+  <data name="Common_EmailNotVerified" xml:space="preserve"><value>⚠ بريدك الإلكتروني غير مؤكد</value></data>
+  <data name="Settings_Title" xml:space="preserve"><value>تعديل الملف الشخصي • إنستغرام</value></data>
+  <data name="Settings_EditProfile" xml:space="preserve"><value>تعديل الملف الشخصي</value></data>
+  <data name="Settings_ChangePassword" xml:space="preserve"><value>تغيير كلمة المرور</value></data>
+  <data name="Settings_ChangePhoto" xml:space="preserve"><value>تغيير صورة الملف الشخصي</value></data>
+  <data name="Settings_UsernameHint" xml:space="preserve"><value>في معظم الحالات، ستتمكن من الرجوع إلى اسم المستخدم السابق لمدة 14 يومًا.</value></data>
+  <data name="Common_Submit" xml:space="preserve"><value>إرسال</value></data>
+  <data name="Common_Saving" xml:space="preserve"><value>جاري الحفظ...</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>إلغاء</value></data>
+  <data name="Error_NotAuthorized" xml:space="preserve"><value>غير مصرح لك بالوصول إلى هذا المورد.</value></data>
+  <data name="Error_NotFound" xml:space="preserve"><value>غير موجود</value></data>
+  <data name="Error_NotFoundMessage" xml:space="preserve"><value>عذرًا، لا يوجد شيء على هذا العنوان.</value></data>
+</root>
+

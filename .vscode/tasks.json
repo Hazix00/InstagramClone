@@ -1,0 +1,118 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run API",
+      "type": "shell",
+      "command": "dotnet run",
+      "options": {
+        "cwd": "${workspaceFolder}/InstagramClone.Api"
+      },
+      "problemMatcher": "$msCompile",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "dev"
+      },
+      "isBackground": true
+    },
+    {
+      "label": "Run Client",
+      "type": "shell",
+      "command": "dotnet run",
+      "options": {
+        "cwd": "${workspaceFolder}/InstagramClone.Client"
+      },
+      "problemMatcher": "$msCompile",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "dev"
+      },
+      "isBackground": true
+    },
+    {
+      "label": "Run API (watch)",
+      "type": "shell",
+      "command": "dotnet watch run",
+      "options": {
+        "cwd": "${workspaceFolder}/InstagramClone.Api"
+      },
+      "problemMatcher": "$msCompile",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "watch"
+      },
+      "isBackground": true
+    },
+    {
+      "label": "Run Client (watch)",
+      "type": "shell",
+      "command": "dotnet watch run",
+      "options": {
+        "cwd": "${workspaceFolder}/InstagramClone.Client"
+      },
+      "problemMatcher": "$msCompile",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "watch"
+      },
+      "isBackground": true
+    },
+    {
+      "label": "Run All",
+      "dependsOn": [
+        "Run API",
+        "Run Client"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Run All (watch)",
+      "dependsOn": [
+        "Run API (watch)",
+        "Run Client (watch)"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Build Tailwind CSS",
+      "type": "shell",
+      "command": "npm run css:build",
+      "options": {
+        "cwd": "${workspaceFolder}/InstagramClone.Client"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Watch Tailwind CSS",
+      "type": "shell",
+      "command": "npm run css:watch",
+      "options": {
+        "cwd": "${workspaceFolder}/InstagramClone.Client"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "watch"
+      },
+      "isBackground": true
+    },
+    {
+      "label": "Run All with Tailwind (watch)",
+      "dependsOn": [
+        "Run API (watch)",
+        "Run Client (watch)",
+        "Watch Tailwind CSS"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}
