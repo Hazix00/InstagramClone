@@ -39,14 +39,29 @@ public class ApplicationDbContext : DbContext
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
 
-        modelBuilder.Entity<Post>()
-            .HasIndex(p => p.UserId);
+        // Configure Post entity
+        modelBuilder.Entity<Post>(entity =>
+        {
+            entity.HasIndex(p => p.UserId);
 
-        modelBuilder.Entity<Post>()
-            .HasOne(p => p.User)
-            .WithMany()
-            .HasForeignKey(p => p.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            // Post -> User relationship
+            entity.HasOne(p => p.User)
+                .WithMany()
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Post -> PostLikes relationship (one-to-many)
+            entity.HasMany(p => p.PostLikes)
+                .WithOne(pl => pl.Post)
+                .HasForeignKey(pl => pl.PostId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Post -> Comments relationship (one-to-many)
+            entity.HasMany(p => p.Comments)
+                .WithOne(c => c.Post)
+                .HasForeignKey(c => c.PostId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
 
         // Follow now has a surrogate key (Id), add unique constraint on follower/followee pair
         modelBuilder.Entity<Follow>()
@@ -71,64 +86,58 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Follow>()
             .HasIndex(f => f.FolloweeId);
 
-        // Comments (self-reference one level for replies)
-        modelBuilder.Entity<Comment>()
-            .HasOne(c => c.Post)
-            .WithMany()
-            .HasForeignKey(c => c.PostId)
-            .OnDelete(DeleteBehavior.Cascade);
+        // Configure Comment entity
+        modelBuilder.Entity<Comment>(entity =>
+        {
+            entity.HasIndex(c => c.PostId);
+            entity.HasIndex(c => c.ParentCommentId);
 
-        modelBuilder.Entity<Comment>()
-            .HasOne(c => c.User)
-            .WithMany()
-            .HasForeignKey(c => c.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            // Comment -> User relationship
+            entity.HasOne(c => c.User)
+                .WithMany()
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-        modelBuilder.Entity<Comment>()
-            .HasOne(c => c.ParentComment)
-            .WithMany(c => c!.Replies)
-            .HasForeignKey(c => c.ParentCommentId)
-            .OnDelete(DeleteBehavior.Cascade);
+            // Comment self-reference for replies (one level deep)
+            entity.HasOne(c => c.ParentComment)
+                .WithMany(c => c!.Replies)
+                .HasForeignKey(c => c.ParentCommentId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
 
-        modelBuilder.Entity<Comment>()
-            .HasIndex(c => c.PostId);
+        // Configure PostLike entity
+        modelBuilder.Entity<PostLike>(entity =>
+        {
+            // Unique constraint: one like per user per post
+            entity.HasIndex(pl => new { pl.PostId, pl.UserId })
+                .IsUnique();
 
-        modelBuilder.Entity<Comment>()
-            .HasIndex(c => c.ParentCommentId);
+            // PostLike -> User relationship
+            entity.HasOne(pl => pl.User)
+                .WithMany()
+                .HasForeignKey(pl => pl.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
 
-        // PostLike now has a surrogate key (Id), add unique constraint on post/user pair
-        modelBuilder.Entity<PostLike>()
-            .HasIndex(pl => new { pl.PostId, pl.UserId })
-            .IsUnique();
+        // Configure CommentLike entity
+        modelBuilder.Entity<CommentLike>(entity =>
+        {
+            // Unique constraint: one like per user per comment
+            entity.HasIndex(cl => new { cl.CommentId, cl.UserId })
+                .IsUnique();
 
-        modelBuilder.Entity<PostLike>()
-            .HasOne(pl => pl.Post)
-            .WithMany()
-            .HasForeignKey(pl => pl.PostId)
-            .OnDelete(DeleteBehavior.Cascade);
+            // CommentLike -> Comment relationship
+            entity.HasOne(cl => cl.Comment)
+                .WithMany()
+                .HasForeignKey(cl => cl.CommentId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-        modelBuilder.Entity<PostLike>()
-            .HasOne(pl => pl.User)
-            .WithMany()
-            .HasForeignKey(pl => pl.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        // CommentLike now has a surrogate key (Id), add unique constraint on comment/user pair
-        modelBuilder.Entity<CommentLike>()
-            .HasIndex(cl => new { cl.CommentId, cl.UserId })
-            .IsUnique();
-
-        modelBuilder.Entity<CommentLike>()
-            .HasOne(cl => cl.Comment)
-            .WithMany()
-            .HasForeignKey(cl => cl.CommentId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        modelBuilder.Entity<CommentLike>()
-            .HasOne(cl => cl.User)
-            .WithMany()
-            .HasForeignKey(cl => cl.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            // CommentLike -> User relationship
+            entity.HasOne(cl => cl.User)
+                .WithMany()
+                .HasForeignKey(cl => cl.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
     }
 }
 

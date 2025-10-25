@@ -15,6 +15,8 @@ public partial class VerifyEmail : ComponentBase
     private bool IsLoading { get; set; }
     private bool IsResending { get; set; }
 
+    private readonly string authEndpoint = "api/auth";
+
     private async Task HandleVerifyEmail()
     {
         ErrorMessage = null;
@@ -23,7 +25,7 @@ public partial class VerifyEmail : ComponentBase
 
         try
         {
-            var response = await Http.PostAsJsonAsync("api/auth/verify-email", VerifyModel);
+            var response = await Http.PostAsJsonAsync($"{authEndpoint}/verify-email", VerifyModel);
 
             if (response.IsSuccessStatusCode)
             {
@@ -52,7 +54,7 @@ public partial class VerifyEmail : ComponentBase
 
         try
         {
-            var response = await Http.PostAsJsonAsync("api/auth/send-verification-email", new { email = VerifyModel.Email });
+            var response = await Http.PostAsJsonAsync($"{authEndpoint}/send-verification-email", new { email = VerifyModel.Email });
 
             if (response.IsSuccessStatusCode)
             {

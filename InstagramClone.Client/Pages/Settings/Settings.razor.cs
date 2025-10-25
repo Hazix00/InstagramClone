@@ -22,6 +22,8 @@ public partial class Settings : ComponentBase
     private string CurrentLanguage { get; set; } = "en";
     private string CurrentTheme { get; set; } = "system";
 
+    private readonly string authEndpoint = "api/auth";
+
     protected override async Task OnInitializedAsync()
     {
         await LoadProfile();
@@ -36,7 +38,7 @@ public partial class Settings : ComponentBase
 
         try
         {
-            CurrentProfile = await Http.GetFromJsonAsync<UserProfileDto>("api/auth/profile");
+            CurrentProfile = await Http.GetFromJsonAsync<UserProfileDto>($"{authEndpoint}/profile");
             
             if (CurrentProfile != null)
             {
@@ -75,7 +77,7 @@ public partial class Settings : ComponentBase
 
         try
         {
-            var response = await Http.PutAsJsonAsync("api/auth/profile", UpdateRequestModel);
+            var response = await Http.PutAsJsonAsync($"{authEndpoint}/profile", UpdateRequestModel);
 
             if (response.IsSuccessStatusCode)
             {

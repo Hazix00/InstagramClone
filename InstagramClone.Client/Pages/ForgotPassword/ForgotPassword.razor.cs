@@ -14,6 +14,8 @@ public partial class ForgotPassword : ComponentBase
     private string? SuccessMessage { get; set; }
     private bool IsLoading { get; set; }
 
+    private readonly string authEndpoint = "api/auth";
+
     private async Task HandleForgotPassword()
     {
         ErrorMessage = null;
@@ -22,7 +24,7 @@ public partial class ForgotPassword : ComponentBase
 
         try
         {
-            var response = await Http.PostAsJsonAsync("api/auth/forgot-password", new { email = EmailModel.Email });
+            var response = await Http.PostAsJsonAsync($"{authEndpoint}/forgot-password", new { email = EmailModel.Email });
 
             if (response.IsSuccessStatusCode)
             {

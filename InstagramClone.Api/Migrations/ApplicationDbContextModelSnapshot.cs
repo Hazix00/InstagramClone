@@ -284,7 +284,7 @@ namespace InstagramClone.Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("InstagramClone.Core.Entities.Post", "Post")
-                        .WithMany()
+                        .WithMany("Comments")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -354,7 +354,7 @@ namespace InstagramClone.Api.Migrations
             modelBuilder.Entity("InstagramClone.Core.Entities.PostLike", b =>
                 {
                     b.HasOne("InstagramClone.Core.Entities.Post", "Post")
-                        .WithMany()
+                        .WithMany("PostLikes")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -373,6 +373,13 @@ namespace InstagramClone.Api.Migrations
             modelBuilder.Entity("InstagramClone.Core.Entities.Comment", b =>
                 {
                     b.Navigation("Replies");
+                });
+
+            modelBuilder.Entity("InstagramClone.Core.Entities.Post", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("PostLikes");
                 });
 #pragma warning restore 612, 618
         }

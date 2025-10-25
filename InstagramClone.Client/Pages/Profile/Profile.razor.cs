@@ -23,6 +23,8 @@ public partial class Profile : ComponentBase
     private bool IsOwnProfile { get; set; }
     private string? CurrentUsername { get; set; }
 
+    private readonly string authEndpoint = "api/auth";
+
     protected override async Task OnInitializedAsync()
     {
         await LoadCurrentUser();
@@ -66,12 +68,12 @@ public partial class Profile : ComponentBase
             
             if (string.IsNullOrEmpty(targetUsername))
             {
-                UserProfile = await Http.GetFromJsonAsync<UserProfileDto>("api/auth/profile");
+                UserProfile = await Http.GetFromJsonAsync<UserProfileDto>($"{authEndpoint}/profile");
                 IsOwnProfile = true;
             }
             else
             {
-                UserProfile = await Http.GetFromJsonAsync<UserProfileDto>($"api/auth/profile/{targetUsername}");
+                UserProfile = await Http.GetFromJsonAsync<UserProfileDto>($"{authEndpoint}/profile/{targetUsername}");
                 IsOwnProfile = string.Equals(targetUsername, CurrentUsername, StringComparison.OrdinalIgnoreCase);
             }
         }

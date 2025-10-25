@@ -1,6 +1,5 @@
-using System.Security.Claims;
+using InstagramClone.Api.Attributes;
 using InstagramClone.Api.Data;
-using InstagramClone.Api.Repositories;
 using InstagramClone.Api.Services;
 using InstagramClone.Core.Entities;
 using InstagramClone.Core.DTOs;
@@ -13,36 +12,14 @@ namespace InstagramClone.Api.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class PostsController(IPostService postService, IUserRepository userRepository, ApplicationDbContext context) : ControllerBase
+public class PostsController(IPostService postService, ApplicationDbContext context) : ControllerBase
 {
     private readonly IPostService _postService = postService;
-    private readonly IUserRepository _userRepository = userRepository;
     private readonly ApplicationDbContext _context = context;
 
-    private async Task<User?> GetCurrentUserAsync()
-    {
-        var idClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                   ?? User.FindFirst("sub")?.Value
-                   ?? User.FindFirst("uid")?.Value;
-
-        if (int.TryParse(idClaim, out var id))
-            return await _userRepository.GetByIdAsync(id);
-
-        var username = User.Identity?.Name
-                    ?? User.FindFirst("preferred_username")?.Value
-                    ?? User.FindFirst("unique_name")?.Value;
-
-        if (string.IsNullOrWhiteSpace(username)) return null;
-
-        return await _userRepository.GetByUsernameAsync(username);
-    }
-
     [HttpGet("me")]
-    public async Task<ActionResult<IEnumerable<PostDto>>> GetMyPosts()
+    public async Task<ActionResult<IEnumerable<PostDto>>> GetMyPosts([CurrentUser] User me)
     {
-        var me = await GetCurrentUserAsync();
-        if (me is null) return Unauthorized();
-
         var posts = await _postService.GetUserPostsAsync(me.Id);
         
         var postDtos = posts.Select(p => new PostDto
@@ -62,10 +39,8 @@ public class PostsController(IPostService postService, IUserRepository userRepos
     }
 
     [HttpGet("feed")]
-    public async Task<ActionResult<IEnumerable<PostDto>>> GetFeed([FromQuery] int take = 5, [FromQuery] int skip = 0)
+    public async Task<ActionResult<IEnumerable<PostDto>>> GetFeed([CurrentUser] User me, [FromQuery] int take = 5, [FromQuery] int skip = 0)
     {
-        var me = await GetCurrentUserAsync();
-        if (me is null) return Unauthorized();
 
         // Get posts with related data
         var posts = await _context.Posts
@@ -102,10 +77,8 @@ public class PostsController(IPostService postService, IUserRepository userRepos
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<PostDto>> GetById(Guid id)
+    public async Task<ActionResult<PostDto>> GetById([CurrentUser] User me, Guid id)
     {
-        var me = await GetCurrentUserAsync();
-        if (me is null) return Unauthorized();
 
         var post = await _context.Posts
             .Include(p => p.User)
@@ -135,10 +108,8 @@ public class PostsController(IPostService postService, IUserRepository userRepos
     }
 
     [HttpPost]
-    public async Task<ActionResult<PostDto>> Create([FromBody] CreatePostRequest request)
+    public async Task<ActionResult<PostDto>> Create([CurrentUser] User me, [FromBody] CreatePostRequest request)
     {
-        var me = await GetCurrentUserAsync();
-        if (me is null) return Unauthorized();
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
         var post = new Post
@@ -168,10 +139,8 @@ public class PostsController(IPostService postService, IUserRepository userRepos
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> Delete([CurrentUser] User me, Guid id)
     {
-        var me = await GetCurrentUserAsync();
-        if (me is null) return Unauthorized();
 
         var post = await _postService.GetByIdAsync(id);
         if (post is null) return NotFound();
@@ -182,10 +151,8 @@ public class PostsController(IPostService postService, IUserRepository userRepos
     }
 
     [HttpPost("{id:guid}/like")]
-    public async Task<IActionResult> Like(Guid id)
+    public async Task<IActionResult> Like([CurrentUser] User me, Guid id)
     {
-        var me = await GetCurrentUserAsync();
-        if (me is null) return Unauthorized();
 
         var success = await _postService.LikePostAsync(id, me.Id);
         if (!success) return NotFound();
@@ -194,10 +161,8 @@ public class PostsController(IPostService postService, IUserRepository userRepos
     }
 
     [HttpDelete("{id:guid}/like")]
-    public async Task<IActionResult> Unlike(Guid id)
+    public async Task<IActionResult> Unlike([CurrentUser] User me, Guid id)
     {
-        var me = await GetCurrentUserAsync();
-        if (me is null) return Unauthorized();
 
         await _postService.UnlikePostAsync(id, me.Id);
         return NoContent();

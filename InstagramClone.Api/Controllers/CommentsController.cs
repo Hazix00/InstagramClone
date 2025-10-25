@@ -1,4 +1,4 @@
-using System.Security.Claims;
+using InstagramClone.Api.Attributes;
 using InstagramClone.Api.Repositories;
 using InstagramClone.Api.Services;
 using InstagramClone.Core.Entities;
@@ -11,33 +11,16 @@ namespace InstagramClone.Api.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class CommentsController(ICommentService commentService, IPostService postService, IUserRepository userRepository) : ControllerBase
+public class CommentsController(ICommentService commentService, IPostService postService, IUserRepository userRepository) 
+    : ControllerBase
 {
     private readonly ICommentService _commentService = commentService;
     private readonly IPostService _postService = postService;
     private readonly IUserRepository _userRepository = userRepository;
 
-    private async Task<User?> GetCurrentUserAsync()
-    {
-        var idClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                   ?? User.FindFirst("sub")?.Value
-                   ?? User.FindFirst("uid")?.Value;
-
-        if (int.TryParse(idClaim, out var id))
-            return await _userRepository.GetByIdAsync(id);
-
-        var username = User.Identity?.Name
-                    ?? User.FindFirst("preferred_username")?.Value
-                    ?? User.FindFirst("unique_name")?.Value;
-
-        if (string.IsNullOrWhiteSpace(username)) return null;
-
-        return await _userRepository.GetByUsernameAsync(username);
-    }
-
     // List top-level comments for a post with pagination
     [HttpGet("post/{postId:guid}")]
-    public async Task<ActionResult<object>> GetCommentsForPost(Guid postId, [FromQuery] int take = 20, [FromQuery] int skip = 0)
+    public async Task<ActionResult<object>> GetCommentsForPost([CurrentUser] User me, Guid postId, [FromQuery] int take = 20, [FromQuery] int skip = 0)
     {
         var postExists = await _postService.ExistsAsync(postId);
         if (!postExists) return NotFound("Post not found.");
@@ -47,15 +30,12 @@ public class CommentsController(ICommentService commentService, IPostService pos
 
         var (total, comments) = await _commentService.GetTopLevelCommentsAsync(postId, take, skip);
 
-        var me = await GetCurrentUserAsync();
-        var currentUserId = me?.Id ?? 0;
-
         var commentDtos = new List<CommentDto>();
         foreach (var comment in comments)
         {
             var user = await _userRepository.GetByIdAsync(comment.UserId);
             var likeCount = await _commentService.GetLikeCountAsync(comment.Id);
-            var isLiked = await _commentService.IsLikedByUserAsync(comment.Id, currentUserId);
+            var isLiked = await _commentService.IsLikedByUserAsync(comment.Id, me.Id);
             var replyCount = await _commentService.GetReplyCountAsync(comment.Id);
 
             commentDtos.Add(new CommentDto
@@ -78,7 +58,7 @@ public class CommentsController(ICommentService commentService, IPostService pos
 
     // List replies for a comment with pagination (on-demand)
     [HttpGet("replies/{parentId:guid}")]
-    public async Task<ActionResult<object>> GetRepliesForComment(Guid parentId, [FromQuery] int take = 20, [FromQuery] int skip = 0)
+    public async Task<ActionResult<object>> GetRepliesForComment([CurrentUser] User me, Guid parentId, [FromQuery] int take = 20, [FromQuery] int skip = 0)
     {
         var parentCommentExists = await _commentService.ExistsAsync(parentId);
         if (!parentCommentExists) return NotFound("Parent comment not found.");
@@ -88,15 +68,12 @@ public class CommentsController(ICommentService commentService, IPostService pos
 
         var (total, replies) = await _commentService.GetRepliesAsync(parentId, take, skip);
 
-        var me = await GetCurrentUserAsync();
-        var currentUserId = me?.Id ?? 0;
-
         var replyDtos = new List<CommentDto>();
         foreach (var reply in replies)
         {
             var user = await _userRepository.GetByIdAsync(reply.UserId);
             var likeCount = await _commentService.GetLikeCountAsync(reply.Id);
-            var isLiked = await _commentService.IsLikedByUserAsync(reply.Id, currentUserId);
+            var isLiked = await _commentService.IsLikedByUserAsync(reply.Id, me.Id);
 
             replyDtos.Add(new CommentDto
             {
@@ -118,10 +95,8 @@ public class CommentsController(ICommentService commentService, IPostService pos
 
     // Create comment or reply
     [HttpPost("post/{postId:guid}")]
-    public async Task<ActionResult<CommentDto>> Create(Guid postId, [FromBody] CommentRequest request)
+    public async Task<ActionResult<CommentDto>> Create([CurrentUser] User me, Guid postId, [FromBody] CommentRequest request)
     {
-        var me = await GetCurrentUserAsync();
-        if (me is null) return Unauthorized();
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
         var postExists = await _postService.ExistsAsync(postId);
@@ -168,10 +143,8 @@ public class CommentsController(ICommentService commentService, IPostService pos
 
     // Delete comment (cascade deletes replies via FK)
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> Delete([CurrentUser] User me, Guid id)
     {
-        var me = await GetCurrentUserAsync();
-        if (me is null) return Unauthorized();
 
         var comment = await _commentService.GetByIdAsync(id);
         if (comment is null) return NotFound();
@@ -183,10 +156,8 @@ public class CommentsController(ICommentService commentService, IPostService pos
 
     // Like comment
     [HttpPost("{id:guid}/like")]
-    public async Task<IActionResult> Like(Guid id)
+    public async Task<IActionResult> Like([CurrentUser] User me, Guid id)
     {
-        var me = await GetCurrentUserAsync();
-        if (me is null) return Unauthorized();
 
         var success = await _commentService.LikeCommentAsync(id, me.Id);
         if (!success) return NotFound();
@@ -196,10 +167,8 @@ public class CommentsController(ICommentService commentService, IPostService pos
 
     // Unlike comment
     [HttpDelete("{id:guid}/like")]
-    public async Task<IActionResult> Unlike(Guid id)
+    public async Task<IActionResult> Unlike([CurrentUser] User me, Guid id)
     {
-        var me = await GetCurrentUserAsync();
-        if (me is null) return Unauthorized();
 
         await _commentService.UnlikeCommentAsync(id, me.Id);
         return NoContent();

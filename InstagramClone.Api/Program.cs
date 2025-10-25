@@ -1,6 +1,7 @@
 using System.Text;
 using InstagramClone.Api.Data;
 using InstagramClone.Api.Middleware;
+using InstagramClone.Api.ModelBinders;
 using InstagramClone.Api.Services;
 using InstagramClone.Api.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -13,7 +14,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddLocalization();
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    // Register custom model binder for [CurrentUser] attribute
+    options.ModelBinderProviders.Insert(0, new CurrentUserModelBinderProvider());
+});
 
 // Configure Entity Framework with PostgreSQL
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

@@ -11,11 +11,13 @@ public class AuthService(HttpClient httpClient, ILocalStorageService localStorag
     private const string TokenKey = "authToken";
     private const string UserKey = "authUser";
 
+    private readonly string authEndpoint = "api/auth";
+
     public async Task<AuthResponse?> LoginAsync(LoginRequest request)
     {
         try
         {
-            var response = await _httpClient.PostAsJsonAsync("api/auth/login", request);
+            var response = await _httpClient.PostAsJsonAsync($"{authEndpoint}/login", request);
             
             if (response.IsSuccessStatusCode)
             {
@@ -40,7 +42,7 @@ public class AuthService(HttpClient httpClient, ILocalStorageService localStorag
     {
         try
         {
-            var response = await _httpClient.PostAsJsonAsync("api/auth/register", request);
+            var response = await _httpClient.PostAsJsonAsync($"{authEndpoint}/register", request);
             
             if (response.IsSuccessStatusCode)
             {

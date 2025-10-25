@@ -1,4 +1,4 @@
-using System.Security.Claims;
+using InstagramClone.Api.Attributes;
 using InstagramClone.Api.Repositories;
 using InstagramClone.Api.Services;
 using InstagramClone.Core.Entities;
@@ -10,33 +10,15 @@ namespace InstagramClone.Api.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class FollowController(IFollowService followService, IUserRepository userRepository) : ControllerBase
+public class FollowController(IFollowService followService, IUserRepository userRepository) 
+    : ControllerBase
 {
     private readonly IFollowService _followService = followService;
     private readonly IUserRepository _userRepository = userRepository;
 
-    private async Task<User?> GetCurrentUserAsync()
-    {
-        var idClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                   ?? User.FindFirst("sub")?.Value
-                   ?? User.FindFirst("uid")?.Value;
-
-        if (int.TryParse(idClaim, out var id))
-            return await _userRepository.GetByIdAsync(id);
-
-        var username = User.Identity?.Name
-                    ?? User.FindFirst("preferred_username")?.Value
-                    ?? User.FindFirst("unique_name")?.Value;
-
-        if (string.IsNullOrWhiteSpace(username)) return null;
-        return await _userRepository.GetByUsernameAsync(username);
-    }
-
     [HttpPost("{username}")]
-    public async Task<IActionResult> Follow(string username)
+    public async Task<IActionResult> Follow([CurrentUser] User me, string username)
     {
-        var me = await GetCurrentUserAsync();
-        if (me is null) return Unauthorized();
 
         var target = await _userRepository.GetByUsernameAsync(username);
         if (target is null) return NotFound("User not found.");
@@ -47,10 +29,8 @@ public class FollowController(IFollowService followService, IUserRepository user
     }
 
     [HttpDelete("{username}")]
-    public async Task<IActionResult> Unfollow(string username)
+    public async Task<IActionResult> Unfollow([CurrentUser] User me, string username)
     {
-        var me = await GetCurrentUserAsync();
-        if (me is null) return Unauthorized();
 
         var target = await _userRepository.GetByUsernameAsync(username);
         if (target is null) return NotFound("User not found.");
@@ -60,10 +40,8 @@ public class FollowController(IFollowService followService, IUserRepository user
     }
 
     [HttpGet("status/{username}")]
-    public async Task<ActionResult<object>> Status(string username)
+    public async Task<ActionResult<object>> Status([CurrentUser] User me, string username)
     {
-        var me = await GetCurrentUserAsync();
-        if (me is null) return Unauthorized();
 
         var target = await _userRepository.GetByUsernameAsync(username);
         if (target is null) return NotFound("User not found.");
