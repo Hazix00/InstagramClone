@@ -35,11 +35,15 @@
                         @foreach (var p in feed)
                         {
                             <div class="bg-instagram-bg-primary-light dark:bg-instagram-bg-primary-dark border border-instagram-border-light dark:border-instagram-border-dark rounded-sm">
-                                <div class="px-4 py-3 font-semibold text-instagram-text-primary-light dark:text-instagram-text-primary-dark">@p.Username</div>
+                                <div class="px-4 py-3">
+                                    <a href="/profile/@p.Username" class="font-semibold text-instagram-text-primary-light dark:text-instagram-text-primary-dark hover:text-gray-600 dark:hover:text-gray-400">@p.Username</a>
+                                </div>
                                 <img src="@p.ImageUrl" alt="post" class="w-full" />
                                 @if (!string.IsNullOrWhiteSpace(p.Caption))
                                 {
-                                    <div class="px-4 py-3 text-sm text-instagram-text-primary-light dark:text-instagram-text-primary-dark"><span class="font-semibold">@p.Username</span> @p.Caption</div>
+                                    <div class="px-4 py-3 text-sm text-instagram-text-primary-light dark:text-instagram-text-primary-dark">
+                                        <a href="/profile/@p.Username" class="font-semibold hover:text-gray-600 dark:hover:text-gray-400">@p.Username</a> @p.Caption
+                                    </div>
                                 }
                                 <div class="px-4 py-2 text-xs text-gray-500 dark:text-gray-400">@p.CreatedAt.ToLocalTime().ToString("g")</div>
                             </div>

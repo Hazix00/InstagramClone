@@ -21,6 +21,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Register JWT Token Service
 builder.Services.AddScoped<JwtTokenService>();
 
+// Register Database Seeder
+builder.Services.AddScoped<DatabaseSeeder>();
+
 // Register Repositories
 builder.Services.AddScoped(typeof(InstagramClone.Api.Repositories.IRepository<>), typeof(InstagramClone.Api.Repositories.Repository<>));
 builder.Services.AddScoped<InstagramClone.Api.Repositories.IUserRepository, InstagramClone.Api.Repositories.UserRepository>();
@@ -142,5 +145,30 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Seed database if --seed argument is provided
+if (args.Contains("--seed"))
+{
+    using var scope = app.Services.CreateScope();
+    var seeder = scope.ServiceProvider.GetRequiredService<DatabaseSeeder>();
+    
+    var userCount = 10000;
+    var postsPerUser = 1;
+    
+    // Parse optional arguments
+    var userCountArg = args.FirstOrDefault(a => a.StartsWith("--users="));
+    if (userCountArg != null && int.TryParse(userCountArg.Split('=')[1], out var parsedUsers))
+        userCount = parsedUsers;
+    
+    var postsArg = args.FirstOrDefault(a => a.StartsWith("--posts="));
+    if (postsArg != null && int.TryParse(postsArg.Split('=')[1], out var parsedPosts))
+        postsPerUser = parsedPosts;
+    
+    Console.WriteLine($"🌱 Seeding database with {userCount} users and {userCount * postsPerUser} posts...");
+    await seeder.SeedAsync(userCount, postsPerUser);
+    Console.WriteLine("✅ Seeding completed! Press any key to exit...");
+    Console.ReadKey();
+    return;
+}
 
 app.Run();

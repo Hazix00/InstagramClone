@@ -28,16 +28,32 @@
     {
         if (firstRender)
         {
-            var theme = await JS.InvokeAsync<string>("themeManager.get");
-            IsDark = theme == "dark";
-            StateHasChanged();
+            try
+            {
+                // Check if dark class is actually applied to the document
+                var isDarkApplied = await JS.InvokeAsync<bool>("eval", "document.documentElement.classList.contains('dark')");
+                IsDark = isDarkApplied;
+                StateHasChanged();
+            }
+            catch
+            {
+                IsDark = false;
+            }
         }
     }
 
     private async Task ToggleTheme()
     {
-        var newTheme = await JS.InvokeAsync<string>("themeManager.toggle");
-        IsDark = newTheme == "dark";
+        try
+        {
+            var newTheme = await JS.InvokeAsync<string>("themeManager.toggle");
+            IsDark = newTheme == "dark";
+        }
+        catch
+        {
+            // Fallback toggle
+            IsDark = !IsDark;
+        }
     }
 }
 

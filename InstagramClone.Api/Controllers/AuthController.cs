@@ -231,6 +231,26 @@ public class AuthController(ApplicationDbContext context, JwtTokenService tokenS
         return Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
     }
 
+    [HttpGet("profile/{username}")]
+    public async Task<ActionResult<UserProfileDto>> GetProfileByUsername(string username)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+        
+        if (user == null)
+        {
+            return NotFound(new { message = "User not found" });
+        }
+
+        return Ok(new UserProfileDto
+        {
+            Id = user.Id,
+            Username = user.Username,
+            Email = user.Email,
+            IsEmailVerified = user.IsEmailVerified,
+            CreatedAt = user.CreatedAt
+        });
+    }
+
     [HttpGet("profile")]
     [Microsoft.AspNetCore.Authorization.Authorize]
     public async Task<ActionResult<UserProfileDto>> GetProfile()

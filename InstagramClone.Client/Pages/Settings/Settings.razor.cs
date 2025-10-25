@@ -131,18 +131,26 @@ public partial class Settings : ComponentBase
         var selected = e.Value?.ToString() ?? "system";
         CurrentTheme = selected;
         
-        if (selected == "system")
+        try
         {
-            // Remove saved preference, use system default
-            await JS.InvokeVoidAsync("localStorage.removeItem", "theme");
-            // Apply system preference
-            var isDark = await JS.InvokeAsync<bool>("window.matchMedia('(prefers-color-scheme: dark)').matches");
-            await JS.InvokeVoidAsync("themeManager.apply", isDark ? "dark" : "light");
+            if (selected == "system")
+            {
+                // Remove saved preference, use system default
+                await JS.InvokeVoidAsync("localStorage.removeItem", "theme");
+                // Apply system preference
+                var isDark = await JS.InvokeAsync<bool>("eval", "window.matchMedia('(prefers-color-scheme: dark)').matches");
+                await JS.InvokeVoidAsync("themeManager.apply", isDark ? "dark" : "light");
+            }
+            else
+            {
+                // Save and apply user preference
+                await JS.InvokeVoidAsync("themeManager.set", selected);
+            }
         }
-        else
+        catch (Exception ex)
         {
-            // Save and apply user preference
-            await JS.InvokeVoidAsync("themeManager.set", selected);
+            // Fallback if JS interop fails
+            Console.WriteLine($"Theme change error: {ex.Message}");
         }
     }
 }
