@@ -62,6 +62,36 @@
       "isBackground": true
     },
     {
+      "label": "Run Gateway",
+      "type": "shell",
+      "command": "dotnet run",
+      "options": {
+        "cwd": "${workspaceFolder}/InstagramClone.Gateway"
+      },
+      "problemMatcher": "$msCompile",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "dev"
+      },
+      "isBackground": true
+    },
+    {
+      "label": "Run Gateway (watch)",
+      "type": "shell",
+      "command": "dotnet watch run",
+      "options": {
+        "cwd": "${workspaceFolder}/InstagramClone.Gateway"
+      },
+      "problemMatcher": "$msCompile",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "watch"
+      },
+      "isBackground": true
+    },
+    {
       "label": "Run All",
       "dependsOn": [
         "Run API",
@@ -104,6 +134,16 @@
         "group": "watch"
       },
       "isBackground": true
+    },
+    {
+      "label": "Run All with Gateway (watch)",
+      "dependsOn": [
+        "Run Gateway (watch)",
+        "Run API (watch)",
+        "Run Client (watch)",
+        "Watch Tailwind CSS"
+      ],
+      "problemMatcher": []
     },
     {
       "label": "Run All with Tailwind (watch)",

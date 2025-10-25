@@ -11,10 +11,13 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-// Configure HttpClient with API base address
+// Configure HttpClient with Gateway base address from configuration
+var gatewayUrl = builder.Configuration["ApiGateway:BaseUrl"] 
+                 ?? throw new InvalidOperationException("ApiGateway:BaseUrl is not configured");
+
 builder.Services.AddScoped(sp => new HttpClient 
 { 
-    BaseAddress = new Uri("http://localhost:5203") // API HTTP URL from launchSettings.json
+    BaseAddress = new Uri(gatewayUrl)
 });
 
 // Add Blazored LocalStorage

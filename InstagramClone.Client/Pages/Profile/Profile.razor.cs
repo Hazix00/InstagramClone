@@ -3,13 +3,14 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Net.Http.Json;
 using System.Security.Claims;
+using InstagramClone.Client.Services;
 
 namespace InstagramClone.Client.Pages.Profile;
 
 public partial class Profile : ComponentBase
 {
     [Inject] public HttpClient Http { get; set; } = default!;
-    [Inject] public InstagramClone.Client.Services.PostService PostService { get; set; } = default!;
+    [Inject] public PostService PostService { get; set; } = default!;
     [Inject] public NavigationManager Navigation { get; set; } = default!;
     [Inject] public AuthenticationStateProvider AuthStateProvider { get; set; } = default!;
     

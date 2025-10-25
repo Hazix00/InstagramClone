@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstagramClone.Client", "In
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstagramClone.Core", "InstagramClone.Core\InstagramClone.Core.csproj", "{6CB4C09B-6106-4E85-8A67-FA046217A3A5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstagramClone.Gateway", "InstagramClone.Gateway\InstagramClone.Gateway.csproj", "{742B261C-AA26-4596-A078-A3EB78F27BFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstagramClone.Seeder", "InstagramClone.Seeder\InstagramClone.Seeder.csproj", "{2A34E581-AC70-40E8-9AD7-20F6697A943B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +59,30 @@ Global
 		{6CB4C09B-6106-4E85-8A67-FA046217A3A5}.Release|x64.Build.0 = Release|Any CPU
 		{6CB4C09B-6106-4E85-8A67-FA046217A3A5}.Release|x86.ActiveCfg = Release|Any CPU
 		{6CB4C09B-6106-4E85-8A67-FA046217A3A5}.Release|x86.Build.0 = Release|Any CPU
+		{742B261C-AA26-4596-A078-A3EB78F27BFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{742B261C-AA26-4596-A078-A3EB78F27BFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{742B261C-AA26-4596-A078-A3EB78F27BFE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{742B261C-AA26-4596-A078-A3EB78F27BFE}.Debug|x64.Build.0 = Debug|Any CPU
+		{742B261C-AA26-4596-A078-A3EB78F27BFE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{742B261C-AA26-4596-A078-A3EB78F27BFE}.Debug|x86.Build.0 = Debug|Any CPU
+		{742B261C-AA26-4596-A078-A3EB78F27BFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{742B261C-AA26-4596-A078-A3EB78F27BFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{742B261C-AA26-4596-A078-A3EB78F27BFE}.Release|x64.ActiveCfg = Release|Any CPU
+		{742B261C-AA26-4596-A078-A3EB78F27BFE}.Release|x64.Build.0 = Release|Any CPU
+		{742B261C-AA26-4596-A078-A3EB78F27BFE}.Release|x86.ActiveCfg = Release|Any CPU
+		{742B261C-AA26-4596-A078-A3EB78F27BFE}.Release|x86.Build.0 = Release|Any CPU
+		{2A34E581-AC70-40E8-9AD7-20F6697A943B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A34E581-AC70-40E8-9AD7-20F6697A943B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A34E581-AC70-40E8-9AD7-20F6697A943B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2A34E581-AC70-40E8-9AD7-20F6697A943B}.Debug|x64.Build.0 = Debug|Any CPU
+		{2A34E581-AC70-40E8-9AD7-20F6697A943B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2A34E581-AC70-40E8-9AD7-20F6697A943B}.Debug|x86.Build.0 = Debug|Any CPU
+		{2A34E581-AC70-40E8-9AD7-20F6697A943B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A34E581-AC70-40E8-9AD7-20F6697A943B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A34E581-AC70-40E8-9AD7-20F6697A943B}.Release|x64.ActiveCfg = Release|Any CPU
+		{2A34E581-AC70-40E8-9AD7-20F6697A943B}.Release|x64.Build.0 = Release|Any CPU
+		{2A34E581-AC70-40E8-9AD7-20F6697A943B}.Release|x86.ActiveCfg = Release|Any CPU
+		{2A34E581-AC70-40E8-9AD7-20F6697A943B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

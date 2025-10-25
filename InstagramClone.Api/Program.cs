@@ -1,12 +1,12 @@
 using System.Text;
 using InstagramClone.Api.Data;
+using InstagramClone.Api.Middleware;
 using InstagramClone.Api.Services;
+using InstagramClone.Api.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Globalization;
-using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,17 +25,17 @@ builder.Services.AddScoped<JwtTokenService>();
 builder.Services.AddScoped<DatabaseSeeder>();
 
 // Register Repositories
-builder.Services.AddScoped(typeof(InstagramClone.Api.Repositories.IRepository<>), typeof(InstagramClone.Api.Repositories.Repository<>));
-builder.Services.AddScoped<InstagramClone.Api.Repositories.IUserRepository, InstagramClone.Api.Repositories.UserRepository>();
-builder.Services.AddScoped<InstagramClone.Api.Repositories.IPostRepository, InstagramClone.Api.Repositories.PostRepository>();
-builder.Services.AddScoped<InstagramClone.Api.Repositories.ICommentRepository, InstagramClone.Api.Repositories.CommentRepository>();
-builder.Services.AddScoped<InstagramClone.Api.Repositories.IFollowRepository, InstagramClone.Api.Repositories.FollowRepository>();
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IPostRepository, PostRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+builder.Services.AddScoped<IFollowRepository, FollowRepository>();
 
 // Register Services
-builder.Services.AddScoped(typeof(InstagramClone.Api.Services.IService<>), typeof(InstagramClone.Api.Services.Service<>));
-builder.Services.AddScoped<InstagramClone.Api.Services.IPostService, InstagramClone.Api.Services.PostService>();
-builder.Services.AddScoped<InstagramClone.Api.Services.ICommentService, InstagramClone.Api.Services.CommentService>();
-builder.Services.AddScoped<InstagramClone.Api.Services.IFollowService, InstagramClone.Api.Services.FollowService>();
+builder.Services.AddScoped(typeof(IService<>), typeof(Service<>));
+builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IFollowService, FollowService>();
 
 // Configure JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key not configured");
@@ -63,20 +63,8 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Add CORS policy for Blazor client
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowBlazorClient", policy =>
-    {
-        policy.WithOrigins(
-                "https://localhost:7111", // Client HTTPS from launchSettings
-                "http://localhost:5245"   // Client HTTP from launchSettings
-            )
-              .AllowAnyMethod()
-              .AllowAnyHeader()
-              .AllowCredentials();
-    });
-});
+// CORS removed - Gateway handles CORS for browser clients
+// API only receives server-to-server requests from Gateway
 
 // Add Swagger/OpenAPI support
 builder.Services.AddEndpointsApiExplorer();
@@ -139,7 +127,8 @@ app.UseHttpsRedirection();
 
 app.UseRequestLocalization(localizationOptions);
 
-app.UseCors("AllowBlazorClient");
+// Add Gateway authentication middleware (must be before Authentication/Authorization)
+app.UseGatewayAuthentication();
 
 app.UseAuthentication();
 app.UseAuthorization();
