@@ -36,6 +36,7 @@ builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<PostService>();
+builder.Services.AddScoped<CommentService>();
 builder.Services.AddScoped<FollowService>();
 
 var host = builder.Build();

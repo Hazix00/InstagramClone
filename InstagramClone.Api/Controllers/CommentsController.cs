@@ -62,12 +62,14 @@ public class CommentsController(ICommentService commentService, IPostService pos
             {
                 Id = comment.Id,
                 PostId = comment.PostId,
+                UserId = comment.UserId,
                 Username = user?.Username ?? "Unknown",
                 Content = comment.Content,
                 CreatedAt = comment.CreatedAt,
-                LikeCount = likeCount,
-                IsLiked = isLiked,
-                ReplyCount = replyCount
+                LikesCount = likeCount,
+                IsLikedByCurrentUser = isLiked,
+                RepliesCount = replyCount,
+                ParentCommentId = comment.ParentCommentId
             });
         }
 
@@ -100,12 +102,14 @@ public class CommentsController(ICommentService commentService, IPostService pos
             {
                 Id = reply.Id,
                 PostId = reply.PostId,
+                UserId = reply.UserId,
                 Username = user?.Username ?? "Unknown",
                 Content = reply.Content,
                 CreatedAt = reply.CreatedAt,
-                LikeCount = likeCount,
-                IsLiked = isLiked,
-                ReplyCount = 0 // Replies don't have further replies in this model
+                LikesCount = likeCount,
+                IsLikedByCurrentUser = isLiked,
+                RepliesCount = 0, // Replies don't have further replies in this model
+                ParentCommentId = reply.ParentCommentId
             });
         }
 
@@ -149,12 +153,14 @@ public class CommentsController(ICommentService commentService, IPostService pos
         {
             Id = comment.Id,
             PostId = comment.PostId,
+            UserId = comment.UserId,
             Username = me.Username,
             Content = comment.Content,
             CreatedAt = comment.CreatedAt,
-            LikeCount = likeCount,
-            IsLiked = isLiked,
-            ReplyCount = replyCount
+            LikesCount = likeCount,
+            IsLikedByCurrentUser = isLiked,
+            RepliesCount = replyCount,
+            ParentCommentId = comment.ParentCommentId
         };
 
         return CreatedAtAction(nameof(GetCommentsForPost), new { postId = comment.PostId }, dto);

@@ -2,17 +2,26 @@ using InstagramClone.Core.DTOs;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using InstagramClone.Client.Services;
+using Microsoft.JSInterop;
 
 namespace InstagramClone.Client.Pages;
 
-public partial class Home : ComponentBase
+public partial class Home : ComponentBase, IAsyncDisposable
 {
     [Inject] public PostService PostService { get; set; } = default!;
     [Inject] public AuthenticationStateProvider AuthStateProvider { get; set; } = default!;
+    [Inject] public IJSRuntime JS { get; set; } = default!;
+    [Inject] public NavigationManager Nav { get; set; } = default!;
 
-    private List<PostDto>? feed;
+    private List<PostDto> feed = new();
     private bool isLoading = true;
+    private bool isLoadingMore = false;
     private string? errorMessage;
+    private int skip = 0;
+    private const int take = 5;
+    private bool hasMore = true;
+    private DotNetObjectReference<Home>? dotNetRef;
+    private IJSObjectReference? scrollModule;
 
     protected override async Task OnInitializedAsync()
     {
@@ -30,6 +39,23 @@ public partial class Home : ComponentBase
         }
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && feed.Any())
+        {
+            try
+            {
+                dotNetRef = DotNetObjectReference.Create(this);
+                scrollModule = await JS.InvokeAsync<IJSObjectReference>("import", "./js/infinite-scroll.js");
+                await scrollModule.InvokeVoidAsync("initInfiniteScroll", dotNetRef);
+            }
+            catch
+            {
+                // JS interop might not be available yet
+            }
+        }
+    }
+
     private async Task LoadFeed()
     {
         isLoading = true;
@@ -37,17 +63,22 @@ public partial class Home : ComponentBase
 
         try
         {
-            feed = await PostService.GetFeedAsync();
+            var posts = await PostService.GetFeedAsync(take, 0);
             
-            if (feed == null)
+            if (posts != null && posts.Any())
+            {
+                feed = posts;
+                skip = feed.Count;
+                hasMore = posts.Count >= take;
+            }
+            else
             {
                 feed = new List<PostDto>();
+                hasMore = false;
             }
         }
         catch (Exception ex)
         {
-            // 401 errors are now handled globally by AuthenticationHandler
-            // which will redirect to login automatically
             errorMessage = $"Failed to load feed: {ex.Message}";
         }
         finally
@@ -56,10 +87,95 @@ public partial class Home : ComponentBase
         }
     }
 
-    private async Task ReloadFeed()
+    [JSInvokable]
+    public async Task LoadMore()
     {
-        await LoadFeed();
+        if (isLoadingMore || !hasMore) return;
+
+        isLoadingMore = true;
         StateHasChanged();
+
+        try
+        {
+            var posts = await PostService.GetFeedAsync(take, skip);
+            
+            if (posts != null && posts.Any())
+            {
+                feed.AddRange(posts);
+                skip += posts.Count;
+                hasMore = posts.Count >= take;
+            }
+            else
+            {
+                hasMore = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Failed to load more posts: {ex.Message}";
+        }
+        finally
+        {
+            isLoadingMore = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task ToggleLike(PostDto post)
+    {
+        try
+        {
+            bool success;
+            if (post.IsLikedByCurrentUser)
+            {
+                success = await PostService.UnlikeAsync(post.Id);
+            }
+            else
+            {
+                success = await PostService.LikeAsync(post.Id);
+            }
+
+            if (success)
+            {
+                // Update the post in the feed
+                var index = feed.FindIndex(p => p.Id == post.Id);
+                if (index >= 0)
+                {
+                    feed[index] = post with 
+                    { 
+                        IsLikedByCurrentUser = !post.IsLikedByCurrentUser,
+                        LikesCount = post.IsLikedByCurrentUser ? post.LikesCount - 1 : post.LikesCount + 1
+                    };
+                    StateHasChanged();
+                }
+            }
+        }
+        catch
+        {
+            // Handle error silently
+        }
+    }
+
+    private void NavigateToPost(Guid postId)
+    {
+        Nav.NavigateTo($"/post/{postId}");
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (scrollModule != null)
+        {
+            try
+            {
+                await scrollModule.InvokeVoidAsync("cleanup");
+                await scrollModule.DisposeAsync();
+            }
+            catch
+            {
+                // Cleanup error
+            }
+        }
+        
+        dotNetRef?.Dispose();
     }
 }
-

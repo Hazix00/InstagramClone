@@ -1,0 +1,241 @@
+@page "/post/{PostId:guid}"
+@attribute [Authorize]
+@using InstagramClone.Core.DTOs
+@using InstagramClone.Client.Resources
+
+<PageTitle>Post | Instagram</PageTitle>
+
+<div class="min-h-screen bg-instagram-gray-light dark:bg-instagram-gray-dark py-8 px-4">
+    <div class="max-w-4xl mx-auto">
+        @if (isLoading)
+        {
+            <div class="text-center text-gray-600 dark:text-gray-400 py-8">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-instagram-blue mx-auto"></div>
+                <p class="mt-4">Loading post...</p>
+            </div>
+        }
+        else if (post == null)
+        {
+            <div class="text-center text-gray-600 dark:text-gray-400 py-8">
+                Post not found
+            </div>
+        }
+        else
+        {
+            <div class="bg-instagram-bg-primary-light dark:bg-instagram-bg-primary-dark border border-instagram-border-light dark:border-instagram-border-dark rounded-sm overflow-hidden md:flex">
+                <!-- Left: Image -->
+                <div class="md:w-2/3 bg-black flex items-center justify-center">
+                    <img src="@post.ImageUrl" alt="post" class="max-w-full max-h-[600px] object-contain" />
+                </div>
+
+                <!-- Right: Comments Section -->
+                <div class="md:w-1/3 flex flex-col max-h-[600px]">
+                    <!-- Post Header -->
+                    <div class="px-4 py-3 border-b border-instagram-border-light dark:border-instagram-border-dark">
+                        <a href="/profile/@post.Username" class="font-semibold text-instagram-text-primary-light dark:text-instagram-text-primary-dark hover:text-gray-600 dark:hover:text-gray-400">
+                            @post.Username
+                        </a>
+                    </div>
+
+                    <!-- Comments List (Scrollable) -->
+                    <div class="flex-1 overflow-y-auto px-4 py-3 space-y-4">
+                        <!-- Caption as first "comment" -->
+                        @if (!string.IsNullOrWhiteSpace(post.Caption))
+                        {
+                            <div class="text-sm">
+                                <a href="/profile/@post.Username" class="font-semibold text-instagram-text-primary-light dark:text-instagram-text-primary-dark hover:text-gray-600 dark:hover:text-gray-400">
+                                    @post.Username
+                                </a>
+                                <span class="ml-2 text-instagram-text-primary-light dark:text-instagram-text-primary-dark">@post.Caption</span>
+                                <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                    @GetTimeAgo(post.CreatedAt)
+                                </div>
+                            </div>
+                        }
+
+                        <!-- Comments -->
+                        @if (isLoadingComments)
+                        {
+                            <div class="text-center text-sm text-gray-500">Loading comments...</div>
+                        }
+                        else
+                        {
+                            @foreach (var comment in comments)
+                            {
+                                <div class="space-y-2">
+                                    <!-- Comment -->
+                                    <div class="text-sm">
+                                        <div class="flex items-start justify-between">
+                                            <div class="flex-1">
+                                                <a href="/profile/@comment.Username" class="font-semibold text-instagram-text-primary-light dark:text-instagram-text-primary-dark hover:text-gray-600 dark:hover:text-gray-400">
+                                                    @comment.Username
+                                                </a>
+                                                <span class="ml-2 text-instagram-text-primary-light dark:text-instagram-text-primary-dark">@comment.Content</span>
+                                            </div>
+                                            <button @onclick="() => ToggleCommentLike(comment)" class="focus:outline-none ml-2">
+                                                @if (comment.IsLikedByCurrentUser)
+                                                {
+                                                    <svg class="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24">
+                                                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                                    </svg>
+                                                }
+                                                else
+                                                {
+                                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                                    </svg>
+                                                }
+                                            </button>
+                                        </div>
+                                        <div class="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center space-x-3">
+                                            <span>@GetTimeAgo(comment.CreatedAt)</span>
+                                            @if (comment.LikesCount > 0)
+                                            {
+                                                <span>@comment.LikesCount @(comment.LikesCount == 1 ? "like" : "likes")</span>
+                                            }
+                                            <button @onclick="() => StartReply(comment)" class="hover:text-gray-700 dark:hover:text-gray-300">Reply</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- View Replies Button -->
+                                    @if (comment.RepliesCount > 0 && !expandedReplies.Contains(comment.Id))
+                                    {
+                                        <button @onclick="() => LoadReplies(comment.Id)" class="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 flex items-center">
+                                            <span class="w-8 border-t border-gray-300 dark:border-gray-600 mr-2"></span>
+                                            View @comment.RepliesCount @(comment.RepliesCount == 1 ? "reply" : "replies")
+                                        </button>
+                                    }
+
+                                    <!-- Replies -->
+                                    @if (expandedReplies.Contains(comment.Id))
+                                    {
+                                        <div class="ml-8 space-y-2">
+                                            @if (isLoadingReplies.ContainsKey(comment.Id) && isLoadingReplies[comment.Id])
+                                            {
+                                                <div class="text-xs text-gray-500">Loading replies...</div>
+                                            }
+                                            else if (repliesByComment.ContainsKey(comment.Id))
+                                            {
+                                                @foreach (var reply in repliesByComment[comment.Id])
+                                                {
+                                                    <div class="text-sm">
+                                                        <div class="flex items-start justify-between">
+                                                            <div class="flex-1">
+                                                                <a href="/profile/@reply.Username" class="font-semibold text-instagram-text-primary-light dark:text-instagram-text-primary-dark hover:text-gray-600 dark:hover:text-gray-400">
+                                                                    @reply.Username
+                                                                </a>
+                                                                <span class="ml-2 text-instagram-text-primary-light dark:text-instagram-text-primary-dark">@reply.Content</span>
+                                                            </div>
+                                                            <button @onclick="() => ToggleCommentLike(reply)" class="focus:outline-none ml-2">
+                                                                @if (reply.IsLikedByCurrentUser)
+                                                                {
+                                                                    <svg class="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24">
+                                                                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                                                    </svg>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                                                    </svg>
+                                                                }
+                                                            </button>
+                                                        </div>
+                                                        <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                            <span>@GetTimeAgo(reply.CreatedAt)</span>
+                                                            @if (reply.LikesCount > 0)
+                                                            {
+                                                                <span class="ml-3">@reply.LikesCount @(reply.LikesCount == 1 ? "like" : "likes")</span>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+                    </div>
+
+                    <!-- Post Actions -->
+                    <div class="border-t border-instagram-border-light dark:border-instagram-border-dark px-4 py-3">
+                        <!-- Like Button -->
+                        <div class="flex items-center space-x-4 mb-2">
+                            <button @onclick="TogglePostLike" class="focus:outline-none">
+                                @if (post.IsLikedByCurrentUser)
+                                {
+                                    <svg class="w-7 h-7 text-red-500 fill-current" viewBox="0 0 24 24">
+                                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                    </svg>
+                                }
+                                else
+                                {
+                                    <svg class="w-7 h-7 text-instagram-text-primary-light dark:text-instagram-text-primary-dark" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                    </svg>
+                                }
+                            </button>
+                        </div>
+
+                        <!-- Likes Count -->
+                        @if (post.LikesCount > 0)
+                        {
+                            <div class="font-semibold text-sm text-instagram-text-primary-light dark:text-instagram-text-primary-dark mb-2">
+                                @post.LikesCount @(post.LikesCount == 1 ? "like" : "likes")
+                            </div>
+                        }
+
+                        <!-- Time Ago -->
+                        <div class="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                            @GetTimeAgo(post.CreatedAt)
+                        </div>
+
+                        <!-- Add Comment -->
+                        <div class="flex items-center space-x-2 border-t border-instagram-border-light dark:border-instagram-border-dark pt-3">
+                            <input 
+                                type="text" 
+                                placeholder="@(replyingTo != null ? $"Reply to {replyingTo.Username}..." : "Add a comment...")"
+                                class="flex-1 bg-transparent text-sm text-instagram-text-primary-light dark:text-instagram-text-primary-dark focus:outline-none"
+                                @bind="commentInput"
+                                @onkeydown="@(async (e) => { if (e.Key == "Enter") await AddComment(); })" />
+                            @if (replyingTo != null)
+                            {
+                                <button @onclick="CancelReply" class="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                                    Cancel
+                                </button>
+                            }
+                            <button 
+                                @onclick="AddComment" 
+                                class="text-instagram-blue font-semibold text-sm disabled:opacity-30"
+                                disabled="@string.IsNullOrWhiteSpace(commentInput)">
+                                Post
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private string GetTimeAgo(DateTime dateTime)
+    {
+        var timeSpan = DateTime.UtcNow - dateTime;
+        
+        if (timeSpan.TotalMinutes < 1)
+            return "just now";
+        if (timeSpan.TotalMinutes < 60)
+            return $"{(int)timeSpan.TotalMinutes}m ago";
+        if (timeSpan.TotalHours < 24)
+            return $"{(int)timeSpan.TotalHours}h ago";
+        if (timeSpan.TotalDays < 7)
+            return $"{(int)timeSpan.TotalDays}d ago";
+        if (timeSpan.TotalDays < 30)
+            return $"{(int)(timeSpan.TotalDays / 7)}w ago";
+        
+        return dateTime.ToString("MMM d");
+    }
+}
+

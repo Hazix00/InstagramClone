@@ -26,5 +26,9 @@ public class Post : BaseEntity<Guid>
     [MaxLength(2200)]
     [Column("caption")]
     public string? Caption { get; set; }
+
+    // Navigation properties
+    public ICollection<PostLike> PostLikes { get; set; } = new List<PostLike>();
+    public ICollection<Comment> Comments { get; set; } = new List<Comment>();
 }
 

@@ -1,20 +1,23 @@
 using System.Security.Claims;
+using InstagramClone.Api.Data;
 using InstagramClone.Api.Repositories;
 using InstagramClone.Api.Services;
 using InstagramClone.Core.Entities;
 using InstagramClone.Core.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace InstagramClone.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class PostsController(IPostService postService, IUserRepository userRepository) : ControllerBase
+public class PostsController(IPostService postService, IUserRepository userRepository, ApplicationDbContext context) : ControllerBase
 {
     private readonly IPostService _postService = postService;
     private readonly IUserRepository _userRepository = userRepository;
+    private readonly ApplicationDbContext _context = context;
 
     private async Task<User?> GetCurrentUserAsync()
     {
@@ -45,38 +48,90 @@ public class PostsController(IPostService postService, IUserRepository userRepos
         var postDtos = posts.Select(p => new PostDto
         {
             Id = p.Id,
+            UserId = p.UserId,
             Username = me.Username,
             ImageUrl = p.ImageUrl,
             Caption = p.Caption,
-            CreatedAt = p.CreatedAt
+            CreatedAt = p.CreatedAt,
+            LikesCount = _context.PostLikes.Count(pl => pl.PostId == p.Id),
+            IsLikedByCurrentUser = _context.PostLikes.Any(pl => pl.PostId == p.Id && pl.UserId == me.Id),
+            CommentsCount = _context.Comments.Count(c => c.PostId == p.Id && c.ParentCommentId == null)
         });
 
         return Ok(postDtos);
     }
 
     [HttpGet("feed")]
-    public async Task<ActionResult<IEnumerable<PostDto>>> GetFeed([FromQuery] int take = 50, [FromQuery] int skip = 0)
+    public async Task<ActionResult<IEnumerable<PostDto>>> GetFeed([FromQuery] int take = 5, [FromQuery] int skip = 0)
     {
         var me = await GetCurrentUserAsync();
         if (me is null) return Unauthorized();
 
-        var posts = await _postService.GetFeedAsync(me.Id, take, skip);
+        // Get posts with related data
+        var posts = await _context.Posts
+            .Include(p => p.User)
+            .Include(p => p.PostLikes)
+            .OrderByDescending(p => p.CreatedAt)
+            .Skip(skip)
+            .Take(take)
+            .ToListAsync();
         
         var postDtos = new List<PostDto>();
         foreach (var post in posts)
         {
-            var user = await _userRepository.GetByIdAsync(post.UserId);
+            // Get comments count (only top-level comments)
+            var commentsCount = await _context.Comments
+                .Where(c => c.PostId == post.Id && c.ParentCommentId == null)
+                .CountAsync();
+
             postDtos.Add(new PostDto
             {
                 Id = post.Id,
-                Username = user?.Username ?? "Unknown",
+                UserId = post.UserId,
+                Username = post.User?.Username ?? "Unknown",
                 ImageUrl = post.ImageUrl,
                 Caption = post.Caption,
-                CreatedAt = post.CreatedAt
+                CreatedAt = post.CreatedAt,
+                LikesCount = post.PostLikes.Count,
+                IsLikedByCurrentUser = post.PostLikes.Any(pl => pl.UserId == me.Id),
+                CommentsCount = commentsCount
             });
         }
 
         return Ok(postDtos);
+    }
+
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<PostDto>> GetById(Guid id)
+    {
+        var me = await GetCurrentUserAsync();
+        if (me is null) return Unauthorized();
+
+        var post = await _context.Posts
+            .Include(p => p.User)
+            .Include(p => p.PostLikes)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (post is null) return NotFound();
+
+        var commentsCount = await _context.Comments
+            .Where(c => c.PostId == post.Id && c.ParentCommentId == null)
+            .CountAsync();
+
+        var dto = new PostDto
+        {
+            Id = post.Id,
+            UserId = post.UserId,
+            Username = post.User?.Username ?? "Unknown",
+            ImageUrl = post.ImageUrl,
+            Caption = post.Caption,
+            CreatedAt = post.CreatedAt,
+            LikesCount = post.PostLikes.Count,
+            IsLikedByCurrentUser = post.PostLikes.Any(pl => pl.UserId == me.Id),
+            CommentsCount = commentsCount
+        };
+
+        return Ok(dto);
     }
 
     [HttpPost]
@@ -99,10 +154,14 @@ public class PostsController(IPostService postService, IUserRepository userRepos
         var dto = new PostDto
         {
             Id = post.Id,
+            UserId = post.UserId,
             Username = me.Username,
             ImageUrl = post.ImageUrl,
             Caption = post.Caption,
-            CreatedAt = post.CreatedAt
+            CreatedAt = post.CreatedAt,
+            LikesCount = 0,
+            IsLikedByCurrentUser = false,
+            CommentsCount = 0
         };
 
         return CreatedAtAction(nameof(GetMyPosts), new { id = post.Id }, dto);
