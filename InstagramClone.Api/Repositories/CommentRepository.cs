@@ -4,9 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InstagramClone.Api.Repositories;
 
-public class CommentRepository : Repository<Comment>, ICommentRepository
+public class CommentRepository(ApplicationDbContext context) : Repository<Comment>(context), ICommentRepository
 {
-    public CommentRepository(ApplicationDbContext context) : base(context) { }
 
     public override async Task<Comment?> GetByIdAsync<TId>(TId id)
     {

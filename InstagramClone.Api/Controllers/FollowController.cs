@@ -10,16 +10,10 @@ namespace InstagramClone.Api.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class FollowController : ControllerBase
+public class FollowController(IFollowService followService, IUserRepository userRepository) : ControllerBase
 {
-    private readonly IFollowService _followService;
-    private readonly IUserRepository _userRepository;
-
-    public FollowController(IFollowService followService, IUserRepository userRepository)
-    {
-        _followService = followService;
-        _userRepository = userRepository;
-    }
+    private readonly IFollowService _followService = followService;
+    private readonly IUserRepository _userRepository = userRepository;
 
     private async Task<User?> GetCurrentUserAsync()
     {

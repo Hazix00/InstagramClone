@@ -2,10 +2,9 @@ using System.Net.Http.Json;
 
 namespace InstagramClone.Client.Services;
 
-public class FollowService
+public class FollowService(HttpClient http)
 {
-    private readonly HttpClient _http;
-    public FollowService(HttpClient http) => _http = http;
+    private readonly HttpClient _http = http;
 
     public Task<HttpResponseMessage> FollowAsync(string username) =>
         _http.PostAsync($"api/follow/{username}", null);

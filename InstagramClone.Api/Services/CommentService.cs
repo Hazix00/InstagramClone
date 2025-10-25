@@ -3,17 +3,10 @@ using InstagramClone.Api.Repositories;
 
 namespace InstagramClone.Api.Services;
 
-public class CommentService : Service<Comment>, ICommentService
+public class CommentService(ICommentRepository commentRepository, IPostRepository postRepository) : Service<Comment>(commentRepository), ICommentService
 {
-    private readonly ICommentRepository _commentRepository;
-    private readonly IPostRepository _postRepository;
-
-    public CommentService(ICommentRepository commentRepository, IPostRepository postRepository) 
-        : base(commentRepository)
-    {
-        _commentRepository = commentRepository;
-        _postRepository = postRepository;
-    }
+    private readonly ICommentRepository _commentRepository = commentRepository;
+    private readonly IPostRepository _postRepository = postRepository;
 
     public async Task<(int total, List<Comment> items)> GetTopLevelCommentsAsync(Guid postId, int take, int skip)
     {

@@ -3,17 +3,10 @@ using InstagramClone.Api.Repositories;
 
 namespace InstagramClone.Api.Services;
 
-public class PostService : Service<Post>, IPostService
+public class PostService(IPostRepository postRepository, IFollowRepository followRepository) : Service<Post>(postRepository), IPostService
 {
-    private readonly IPostRepository _postRepository;
-    private readonly IFollowRepository _followRepository;
-
-    public PostService(IPostRepository postRepository, IFollowRepository followRepository) 
-        : base(postRepository)
-    {
-        _postRepository = postRepository;
-        _followRepository = followRepository;
-    }
+    private readonly IPostRepository _postRepository = postRepository;
+    private readonly IFollowRepository _followRepository = followRepository;
 
     public async Task<List<Post>> GetUserPostsAsync(int userId)
     {

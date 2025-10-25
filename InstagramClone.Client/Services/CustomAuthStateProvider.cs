@@ -2,20 +2,15 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
+using System.Net.Http.Headers;
 
 namespace InstagramClone.Client.Services;
 
-public class CustomAuthStateProvider : AuthenticationStateProvider
+public class CustomAuthStateProvider(ILocalStorageService localStorage, HttpClient httpClient) : AuthenticationStateProvider
 {
-    private readonly ILocalStorageService _localStorage;
-    private readonly HttpClient _httpClient;
+    private readonly ILocalStorageService _localStorage = localStorage;
+    private readonly HttpClient _httpClient = httpClient;
     private const string TokenKey = "authToken";
-
-    public CustomAuthStateProvider(ILocalStorageService localStorage, HttpClient httpClient)
-    {
-        _localStorage = localStorage;
-        _httpClient = httpClient;
-    }
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
@@ -31,7 +26,7 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
 
         // Add token to HTTP client default headers
         _httpClient.DefaultRequestHeaders.Authorization = 
-            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            new AuthenticationHeaderValue("Bearer", token);
 
         var claims = ParseClaimsFromJwt(token);
         var identity = new ClaimsIdentity(claims, "jwt");

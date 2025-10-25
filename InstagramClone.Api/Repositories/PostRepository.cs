@@ -4,9 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InstagramClone.Api.Repositories;
 
-public class PostRepository : Repository<Post>, IPostRepository
+public class PostRepository(ApplicationDbContext context) : Repository<Post>(context), IPostRepository
 {
-    public PostRepository(ApplicationDbContext context) : base(context) { }
 
     public async Task<List<Post>> GetUserPostsAsync(int userId) =>
         await _dbSet

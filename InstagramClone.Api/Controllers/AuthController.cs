@@ -1,5 +1,4 @@
 using InstagramClone.Api.Data;
-using InstagramClone.Api.Repositories;
 using InstagramClone.Api.Services;
 using InstagramClone.Core.Entities;
 using InstagramClone.Core.DTOs;
@@ -12,21 +11,11 @@ namespace InstagramClone.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthController : ControllerBase
+public class AuthController(ApplicationDbContext context, JwtTokenService tokenService, ILogger<AuthController> logger) : ControllerBase
 {
-    private readonly ApplicationDbContext _context;
-    private readonly JwtTokenService _tokenService;
-    private readonly ILogger<AuthController> _logger;
-
-    public AuthController(
-        ApplicationDbContext context,
-        JwtTokenService tokenService,
-        ILogger<AuthController> logger)
-    {
-        _context = context;
-        _tokenService = tokenService;
-        _logger = logger;
-    }
+    private readonly ApplicationDbContext _context = context;
+    private readonly JwtTokenService _tokenService = tokenService;
+    private readonly ILogger<AuthController> _logger = logger;
 
     [HttpPost("register")]
     public async Task<ActionResult<AuthResponse>> Register([FromBody] RegisterRequest request)
@@ -136,8 +125,8 @@ public class AuthController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        var user = await _context.Users.FirstOrDefaultAsync(u => 
-            u.Email == request.Email && 
+        var user = await _context.Users.FirstOrDefaultAsync(u =>
+            u.Email == request.Email &&
             u.PasswordResetToken == request.Token &&
             u.PasswordResetTokenExpires > DateTime.UtcNow);
 
@@ -200,8 +189,8 @@ public class AuthController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        var user = await _context.Users.FirstOrDefaultAsync(u => 
-            u.Email == request.Email && 
+        var user = await _context.Users.FirstOrDefaultAsync(u =>
+            u.Email == request.Email &&
             u.EmailVerificationToken == request.Token &&
             u.EmailVerificationTokenExpires > DateTime.UtcNow);
 
@@ -247,7 +236,7 @@ public class AuthController : ControllerBase
     public async Task<ActionResult<UserProfileDto>> GetProfile()
     {
         var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-        
+
         if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
         {
             return Unauthorized();
@@ -282,7 +271,7 @@ public class AuthController : ControllerBase
         }
 
         var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-        
+
         if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
         {
             return Unauthorized(new { message = "Invalid user token" });

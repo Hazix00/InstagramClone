@@ -3,10 +3,9 @@ using InstagramClone.Core.DTOs;
 
 namespace InstagramClone.Client.Services;
 
-public class PostService
+public class PostService(HttpClient http)
 {
-    private readonly HttpClient _http;
-    public PostService(HttpClient http) => _http = http;
+    private readonly HttpClient _http = http;
 
     public Task<List<PostDto>?> GetMyPostsAsync() =>
         _http.GetFromJsonAsync<List<PostDto>>("api/posts/me");

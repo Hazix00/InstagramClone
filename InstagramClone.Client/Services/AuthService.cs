@@ -1,22 +1,15 @@
 using System.Net.Http.Json;
-using System.Text.Json;
 using Blazored.LocalStorage;
 using InstagramClone.Core.DTOs;
 
 namespace InstagramClone.Client.Services;
 
-public class AuthService
+public class AuthService(HttpClient httpClient, ILocalStorageService localStorage)
 {
-    private readonly HttpClient _httpClient;
-    private readonly ILocalStorageService _localStorage;
+    private readonly HttpClient _httpClient = httpClient;
+    private readonly ILocalStorageService _localStorage = localStorage;
     private const string TokenKey = "authToken";
     private const string UserKey = "authUser";
-
-    public AuthService(HttpClient httpClient, ILocalStorageService localStorage)
-    {
-        _httpClient = httpClient;
-        _localStorage = localStorage;
-    }
 
     public async Task<AuthResponse?> LoginAsync(LoginRequest request)
     {

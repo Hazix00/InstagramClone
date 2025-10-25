@@ -4,9 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InstagramClone.Api.Repositories;
 
-public class FollowRepository : Repository<Follow>, IFollowRepository
+public class FollowRepository(ApplicationDbContext context) : Repository<Follow>(context), IFollowRepository
 {
-    public FollowRepository(ApplicationDbContext context) : base(context) { }
 
     public async Task<Follow?> GetAsync(int followerId, int followeeId) =>
         await _dbSet.FirstOrDefaultAsync(f => f.FollowerId == followerId && f.FolloweeId == followeeId);

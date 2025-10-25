@@ -11,18 +11,11 @@ namespace InstagramClone.Api.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class CommentsController : ControllerBase
+public class CommentsController(ICommentService commentService, IPostService postService, IUserRepository userRepository) : ControllerBase
 {
-    private readonly ICommentService _commentService;
-    private readonly IPostService _postService;
-    private readonly IUserRepository _userRepository;
-
-    public CommentsController(ICommentService commentService, IPostService postService, IUserRepository userRepository)
-    {
-        _commentService = commentService;
-        _postService = postService;
-        _userRepository = userRepository;
-    }
+    private readonly ICommentService _commentService = commentService;
+    private readonly IPostService _postService = postService;
+    private readonly IUserRepository _userRepository = userRepository;
 
     private async Task<User?> GetCurrentUserAsync()
     {
