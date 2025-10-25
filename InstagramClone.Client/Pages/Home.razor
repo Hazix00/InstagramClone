@@ -1,35 +1,33 @@
 ﻿@page "/"
 @using System.Security.Claims
 @using InstagramClone.Core.DTOs
+@using InstagramClone.Client.Resources
 
 <PageTitle>Instagram</PageTitle>
 
-<div class="min-h-screen flex items-center justify-center bg-instagram-gray py-12 px-4 sm:px-6 lg:px-8">
+<div class="min-h-screen flex items-center justify-center bg-instagram-gray-light dark:bg-instagram-gray-dark py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full">
         <AuthorizeView>
             <Authorized>
-                @code {
-                    private List<PostDto>? feed;
-                    [Inject] public InstagramClone.Client.Services.PostService PostService { get; set; } = default!;
-
-                    protected override async Task OnInitializedAsync()
-                    {
-                        feed = await PostService.GetFeedAsync() ?? new();
-                    }
-                }
-                @* Feed *@
-                @if (feed == null)
+                @if (isLoading)
                 {
                     <div class="text-center text-gray-600 dark:text-gray-400">@UI.Home_LoadingFeed</div>
                 }
-                else if (feed.Count == 0)
+                else if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <div class="bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-700 text-red-600 dark:text-red-200 px-4 py-3 rounded mb-4">
+                        <p class="font-semibold">@errorMessage</p>
+                        <button @onclick="ReloadFeed" class="mt-2 text-sm underline">Try again</button>
+                    </div>
+                }
+                else if (feed != null && feed.Count == 0)
                 {
                     <div class="text-center text-gray-600 dark:text-gray-400">
                         @UI.Home_NoPosts
                         <a class="instagram-link" href="/new-post">@UI.Home_CreateOne</a>
                     </div>
                 }
-                else
+                else if (feed != null)
                 {
                     <div class="max-w-xl mx-auto space-y-6">
                         @foreach (var p in feed)

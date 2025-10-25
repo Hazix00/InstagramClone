@@ -2,44 +2,97 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug Gateway",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/InstagramClone.Gateway/bin/Debug/net9.0/InstagramClone.Gateway.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/InstagramClone.Gateway",
+      "stopAtEntry": false,
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+      }
+    },
+    {
+      "name": "Debug Gateway (watch)",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "dotnet",
+      "args": ["watch", "run", "--project", "${workspaceFolder}/InstagramClone.Gateway/InstagramClone.Gateway.csproj"],
+      "cwd": "${workspaceFolder}/InstagramClone.Gateway",
+      "stopAtEntry": false,
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "console": "integratedTerminal"
+    },
+    {
       "name": "Debug API",
       "type": "coreclr",
       "request": "launch",
-      "preLaunchTask": "Run API",
+      "preLaunchTask": "build",
       "program": "${workspaceFolder}/InstagramClone.Api/bin/Debug/net9.0/InstagramClone.Api.dll",
       "args": [],
       "cwd": "${workspaceFolder}/InstagramClone.Api",
-      "console": "internalConsole",
       "stopAtEntry": false,
       "env": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
+    },
+    {
+      "name": "Debug API (watch)",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "dotnet",
+      "args": ["watch", "run", "--project", "${workspaceFolder}/InstagramClone.Api/InstagramClone.Api.csproj"],
+      "cwd": "${workspaceFolder}/InstagramClone.Api",
+      "stopAtEntry": false,
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "console": "integratedTerminal"
     },
     {
       "name": "Debug Client",
       "type": "coreclr",
       "request": "launch",
-      "preLaunchTask": "Run Client",
+      "preLaunchTask": "build",
       "program": "${workspaceFolder}/InstagramClone.Client/bin/Debug/net9.0/InstagramClone.Client.dll",
       "args": [],
       "cwd": "${workspaceFolder}/InstagramClone.Client",
-      "console": "internalConsole",
       "stopAtEntry": false,
       "env": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     {
-      "name": "Attach API (.NET)",
+      "name": "Debug Client (watch)",
       "type": "coreclr",
-      "request": "attach",
-      "processId": "${command:pickProcess}"
+      "request": "launch",
+      "program": "dotnet",
+      "args": ["watch", "run", "--project", "${workspaceFolder}/InstagramClone.Client/InstagramClone.Client.csproj"],
+      "cwd": "${workspaceFolder}/InstagramClone.Client",
+      "stopAtEntry": false,
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "console": "integratedTerminal"
     },
     {
-      "name": "Launch Client (Chrome)",
-      "type": "pwa-chrome",
+      "name": "Debug Client (Browser)",
+      "type": "blazorwasm",
       "request": "launch",
-      "url": "https://localhost:7111",
+      "cwd": "${workspaceFolder}/InstagramClone.Client",
+      "browser": "chrome",
+      "url": "http://localhost:5245",
+      "timeout": 120000,
+      "trace": true,
+      "hosted": true,
       "webRoot": "${workspaceFolder}/InstagramClone.Client/wwwroot"
     }
   ],
@@ -47,20 +100,45 @@
     {
       "name": "Debug All",
       "configurations": [
+        "Debug Gateway",
         "Debug API",
         "Debug Client"
       ],
-      "preLaunchTask": "Run All",
-      "stopAll": true
+      "stopAll": true,
+      "presentation": {
+        "hidden": false,
+        "group": "1-debug",
+        "order": 1
+      }
     },
     {
       "name": "Debug All (watch)",
       "configurations": [
-        "Attach API (.NET)",
-        "Launch Client (Chrome)"
+        "Debug Gateway (watch)",
+        "Debug API (watch)",
+        "Debug Client (watch)"
       ],
-      "preLaunchTask": "Run All (watch)",
-      "stopAll": true
+      "stopAll": true,
+      "presentation": {
+        "hidden": false,
+        "group": "1-debug",
+        "order": 2
+      }
+    },
+    {
+      "name": "Debug All (watch) + Browser",
+      "configurations": [
+        "Debug Gateway (watch)",
+        "Debug API (watch)",
+        "Debug Client (watch)",
+        "Debug Client (Browser)"
+      ],
+      "stopAll": true,
+      "presentation": {
+        "hidden": false,
+        "group": "1-debug",
+        "order": 3
+      }
     }
   ]
 }

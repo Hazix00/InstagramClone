@@ -24,6 +24,15 @@ public class CustomAuthStateProvider(ILocalStorageService localStorage, HttpClie
         // Remove quotes if they exist
         token = token.Trim('"');
 
+        // Validate token expiration
+        if (IsTokenExpired(token))
+        {
+            // Token is expired, clear it and return unauthenticated state
+            await _localStorage.RemoveItemAsync(TokenKey);
+            _httpClient.DefaultRequestHeaders.Authorization = null;
+            return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
+        }
+
         // Add token to HTTP client default headers
         _httpClient.DefaultRequestHeaders.Authorization = 
             new AuthenticationHeaderValue("Bearer", token);
@@ -61,6 +70,29 @@ public class CustomAuthStateProvider(ILocalStorageService localStorage, HttpClie
         var handler = new JwtSecurityTokenHandler();
         var token = handler.ReadJwtToken(jwt);
         return token.Claims;
+    }
+
+    private static bool IsTokenExpired(string jwt)
+    {
+        try
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var token = handler.ReadJwtToken(jwt);
+            
+            // Check if token has expired (exp claim is in Unix timestamp)
+            var expClaim = token.Claims.FirstOrDefault(c => c.Type == "exp");
+            if (expClaim != null && long.TryParse(expClaim.Value, out long exp))
+            {
+                var expirationDate = DateTimeOffset.FromUnixTimeSeconds(exp).UtcDateTime;
+                return DateTime.UtcNow >= expirationDate;
+            }
+            
+            return false; // If no exp claim, assume not expired
+        }
+        catch
+        {
+            return true; // If token is malformed, consider it expired
+        }
     }
 }
 

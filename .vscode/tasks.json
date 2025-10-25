@@ -153,6 +153,62 @@
         "Watch Tailwind CSS"
       ],
       "problemMatcher": []
+    },
+    {
+      "label": "Seed Database (10k users)",
+      "type": "shell",
+      "command": "dotnet run --project InstagramClone.Seeder -- --users 10000 --posts 1",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true
+      }
+    },
+    {
+      "label": "Seed Database (small - 100 users)",
+      "type": "shell",
+      "command": "dotnet run --project InstagramClone.Seeder -- --users 100 --posts 2",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true
+      }
+    },
+    {
+      "label": "Seed Database (custom)",
+      "type": "shell",
+      "command": "dotnet run --project InstagramClone.Seeder -- --users ${input:userCount} --posts ${input:postsPerUser}",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "userCount",
+      "type": "promptString",
+      "description": "Number of users to seed",
+      "default": "1000"
+    },
+    {
+      "id": "postsPerUser",
+      "type": "promptString",
+      "description": "Number of posts per user",
+      "default": "1"
     }
   ]
 }

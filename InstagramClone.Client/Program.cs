@@ -11,14 +11,22 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-// Configure HttpClient with Gateway base address from configuration
+// Register the authentication handler
+builder.Services.AddScoped<AuthenticationHandler>();
+
+// Configure HttpClient with Gateway base address and authentication handler
 var gatewayUrl = builder.Configuration["ApiGateway:BaseUrl"] 
                  ?? throw new InvalidOperationException("ApiGateway:BaseUrl is not configured");
 
-builder.Services.AddScoped(sp => new HttpClient 
-{ 
-    BaseAddress = new Uri(gatewayUrl)
-});
+builder.Services.AddHttpClient("API", client => 
+{
+    client.BaseAddress = new Uri(gatewayUrl);
+})
+.AddHttpMessageHandler<AuthenticationHandler>();
+
+// Register the default HttpClient (uses the named "API" client)
+builder.Services.AddScoped(sp => 
+    sp.GetRequiredService<IHttpClientFactory>().CreateClient("API"));
 
 // Add Blazored LocalStorage
 builder.Services.AddBlazoredLocalStorage();

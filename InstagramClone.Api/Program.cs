@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,8 +22,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Register JWT Token Service
 builder.Services.AddScoped<JwtTokenService>();
 
-// Register Database Seeder
-builder.Services.AddScoped<DatabaseSeeder>();
 
 // Register Repositories
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
@@ -123,9 +122,21 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+
 app.UseHttpsRedirection();
 
 app.UseRequestLocalization(localizationOptions);
+
+app.Use(async (context, next) =>
+{
+    var hasAuth = context.Request.Headers.ContainsKey("Authorization");
+    app.Logger.LogInformation("API received: {Method} {Path} from {RemoteIp}, HasAuth: {HasAuth}",
+        context.Request.Method,
+        context.Request.Path,
+        context.Connection.RemoteIpAddress,
+        hasAuth);
+    await next();
+});
 
 // Add Gateway authentication middleware (must be before Authentication/Authorization)
 app.UseGatewayAuthentication();
@@ -134,30 +145,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-// Seed database if --seed argument is provided
-if (args.Contains("--seed"))
-{
-    using var scope = app.Services.CreateScope();
-    var seeder = scope.ServiceProvider.GetRequiredService<DatabaseSeeder>();
-    
-    var userCount = 10000;
-    var postsPerUser = 1;
-    
-    // Parse optional arguments
-    var userCountArg = args.FirstOrDefault(a => a.StartsWith("--users="));
-    if (userCountArg != null && int.TryParse(userCountArg.Split('=')[1], out var parsedUsers))
-        userCount = parsedUsers;
-    
-    var postsArg = args.FirstOrDefault(a => a.StartsWith("--posts="));
-    if (postsArg != null && int.TryParse(postsArg.Split('=')[1], out var parsedPosts))
-        postsPerUser = parsedPosts;
-    
-    Console.WriteLine($"🌱 Seeding database with {userCount} users and {userCount * postsPerUser} posts...");
-    await seeder.SeedAsync(userCount, postsPerUser);
-    Console.WriteLine("✅ Seeding completed! Press any key to exit...");
-    Console.ReadKey();
-    return;
-}
 
 app.Run();
