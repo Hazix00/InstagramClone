@@ -19,6 +19,7 @@ public partial class Login : ComponentBase
     {
         ErrorMessage = null;
         IsLoading = true;
+        StateHasChanged(); // Force UI update to show loading state
 
         try
         {
@@ -32,20 +33,21 @@ public partial class Login : ComponentBase
                     customAuthStateProvider.NotifyUserAuthentication(result.Token);
                 }
 
-                Navigation.NavigateTo("/");
+                // Navigate with forceLoad to ensure clean state
+                Navigation.NavigateTo("/", forceLoad: true);
             }
             else
             {
                 ErrorMessage = "Sorry, your username or password was incorrect. Please double-check your credentials.";
+                IsLoading = false;
+                StateHasChanged(); // Force UI update to show error
             }
         }
         catch (Exception ex)
         {
             ErrorMessage = $"An error occurred: {ex.Message}";
-        }
-        finally
-        {
             IsLoading = false;
+            StateHasChanged(); // Force UI update to show error
         }
     }
 }

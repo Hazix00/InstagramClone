@@ -67,9 +67,9 @@ public class AuthController(ApplicationDbContext context, JwtTokenService tokenS
             return BadRequest(ModelState);
         }
 
-        // Find user by username
+        // Find user by username OR email
         var user = await _context.Users
-            .FirstOrDefaultAsync(u => u.Username == request.Username);
+            .FirstOrDefaultAsync(u => u.Username == request.Username || u.Email == request.Username);
 
         if (user == null || !VerifyPassword(request.Password, user.PasswordHash))
         {
