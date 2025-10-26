@@ -11,7 +11,6 @@ public partial class Home : ComponentBase, IAsyncDisposable
     [Inject] public PostService PostService { get; set; } = default!;
     [Inject] public AuthenticationStateProvider AuthStateProvider { get; set; } = default!;
     [Inject] public IJSRuntime JS { get; set; } = default!;
-    [Inject] public NavigationManager Nav { get; set; } = default!;
 
     private List<PostDto> feed = new();
     private bool isLoading = true;
@@ -22,6 +21,10 @@ public partial class Home : ComponentBase, IAsyncDisposable
     private bool hasMore = true;
     private DotNetObjectReference<Home>? dotNetRef;
     private IJSObjectReference? scrollModule;
+
+    // Comments Modal State
+    private bool isCommentsModalOpen = false;
+    private PostDto? selectedPost;
 
     protected override async Task OnInitializedAsync()
     {
@@ -146,6 +149,13 @@ public partial class Home : ComponentBase, IAsyncDisposable
                         IsLikedByCurrentUser = !post.IsLikedByCurrentUser,
                         LikesCount = post.IsLikedByCurrentUser ? post.LikesCount - 1 : post.LikesCount + 1
                     };
+
+                    // Update selected post if modal is open
+                    if (selectedPost?.Id == post.Id)
+                    {
+                        selectedPost = feed[index];
+                    }
+
                     StateHasChanged();
                 }
             }
@@ -156,9 +166,18 @@ public partial class Home : ComponentBase, IAsyncDisposable
         }
     }
 
-    private void NavigateToPost(Guid postId)
+    private void OpenComments(PostDto post)
     {
-        Nav.NavigateTo($"/post/{postId}");
+        selectedPost = post;
+        isCommentsModalOpen = true;
+        StateHasChanged();
+    }
+
+    private void CloseComments()
+    {
+        isCommentsModalOpen = false;
+        selectedPost = null;
+        StateHasChanged();
     }
 
     public async ValueTask DisposeAsync()

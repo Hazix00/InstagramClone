@@ -57,5 +57,23 @@
   <data name="Home_LoadingFeed" xml:space="preserve"><value>جاري تحميل الخلاصة...</value></data>
   <data name="Home_NoPosts" xml:space="preserve"><value>لا توجد منشورات حتى الآن.</value></data>
   <data name="Home_CreateOne" xml:space="preserve"><value>أنشئ واحدة</value></data>
+  <data name="Home_LoadingMore" xml:space="preserve"><value>جاري تحميل المزيد...</value></data>
+  <data name="PostCard_ViewAllComments" xml:space="preserve"><value>عرض الكل</value></data>
+  <data name="PostCard_AddComment" xml:space="preserve"><value>أضف تعليقًا...</value></data>
+  <data name="CommentForm_AddComment" xml:space="preserve"><value>أضف تعليقًا...</value></data>
+  <data name="CommentForm_ReplyTo" xml:space="preserve"><value>الرد على {0}...</value></data>
+  <data name="CommentItem_ViewReplies" xml:space="preserve"><value>عرض الردود</value></data>
+  <data name="CommentsModal_Comments" xml:space="preserve"><value>التعليقات</value></data>
+  <data name="CommentsModal_LoadingComments" xml:space="preserve"><value>جاري تحميل التعليقات...</value></data>
+  <data name="CommentsModal_NoComments" xml:space="preserve"><value>لا توجد تعليقات حتى الآن. كن أول من يعلق!</value></data>
+  <data name="CommentsModal_LoadingMore" xml:space="preserve"><value>جاري تحميل المزيد من التعليقات...</value></data>
+  <data name="Theme_Toggle" xml:space="preserve"><value>تبديل السمة</value></data>
+  <data name="Common_Post" xml:space="preserve"><value>نشر</value></data>
+  <data name="Common_Reply" xml:space="preserve"><value>رد</value></data>
+  <data name="Common_To" xml:space="preserve"><value>على</value></data>
+  <data name="Common_Like" xml:space="preserve"><value>إعجاب</value></data>
+  <data name="Common_Likes" xml:space="preserve"><value>إعجابات</value></data>
+  <data name="Common_Comment" xml:space="preserve"><value>تعليق</value></data>
+  <data name="Common_Comments" xml:space="preserve"><value>تعليقات</value></data>
 </root>
 

@@ -5,8 +5,8 @@
 
 <PageTitle>Instagram</PageTitle>
 
-<div class="min-h-screen bg-instagram-gray-light dark:bg-instagram-gray-dark py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-2xl mx-auto">
+<div class="min-h-screen bg-instagram-gray-light dark:bg-instagram-gray-dark py-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-screen-md mx-auto flex justify-center">
         <AuthorizeView>
             <Authorized>
                 @if (isLoading)
@@ -18,110 +18,48 @@
                 }
                 else if (!string.IsNullOrEmpty(errorMessage))
                 {
-                    <div class="bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-700 text-red-600 dark:text-red-200 px-4 py-3 rounded mb-4">
+                    <div class="bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-700 text-red-600 dark:text-red-200 px-4 py-3 rounded mb-4 max-w-[470px] w-full">
                         <p class="font-semibold">@errorMessage</p>
                     </div>
                 }
                 else if (feed.Count == 0)
                 {
-                    <div class="text-center text-gray-600 dark:text-gray-400 py-8">
+                    <div class="text-center text-gray-600 dark:text-gray-400 py-8 max-w-[470px] w-full">
                         @UI.Home_NoPosts
                         <a class="instagram-link" href="/new-post">@UI.Home_CreateOne</a>
                     </div>
                 }
                 else
                 {
-                    <div class="space-y-6">
+                    <div class="w-full flex flex-col items-center">
                         @foreach (var post in feed)
                         {
-                            <div class="bg-instagram-bg-primary-light dark:bg-instagram-bg-primary-dark border border-instagram-border-light dark:border-instagram-border-dark rounded-sm">
-                                <!-- Post Header -->
-                                <div class="px-4 py-3 flex items-center">
-                                    <a href="/profile/@post.Username" class="font-semibold text-instagram-text-primary-light dark:text-instagram-text-primary-dark hover:text-gray-600 dark:hover:text-gray-400">
-                                        @post.Username
-                                    </a>
-                                </div>
+                            <PostCard 
+                                Post="@post"
+                                OnLikeToggle="@(() => ToggleLike(post))"
+                                OnCommentClick="@(() => OpenComments(post))"
+                                OnImageClick="@(() => OpenComments(post))" />
+                        }
 
-                                <!-- Post Image -->
-                                <img src="@post.ImageUrl" alt="post" class="w-full cursor-pointer" @onclick="() => NavigateToPost(post.Id)" />
-
-                                <!-- Post Actions -->
-                                <div class="px-4 py-3 space-y-2">
-                                    <!-- Like, Comment Icons -->
-                                    <div class="flex items-center space-x-4">
-                                        <button @onclick="() => ToggleLike(post)" class="focus:outline-none">
-                                            @if (post.IsLikedByCurrentUser)
-                                            {
-                                                <svg class="w-7 h-7 text-red-500 fill-current" viewBox="0 0 24 24">
-                                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                                                </svg>
-                                            }
-                                            else
-                                            {
-                                                <svg class="w-7 h-7 text-instagram-text-primary-light dark:text-instagram-text-primary-dark" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                                                </svg>
-                                            }
-                                        </button>
-                                        <button @onclick="() => NavigateToPost(post.Id)" class="focus:outline-none">
-                                            <svg class="w-6 h-6 text-instagram-text-primary-light dark:text-instagram-text-primary-dark" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                                            </svg>
-                                        </button>
-                                    </div>
-
-                                    <!-- Likes Count -->
-                                    @if (post.LikesCount > 0)
-                                    {
-                                        <div class="font-semibold text-sm text-instagram-text-primary-light dark:text-instagram-text-primary-dark">
-                                            @post.LikesCount @(post.LikesCount == 1 ? "like" : "likes")
-                                        </div>
-                                    }
-
-                                    <!-- Caption -->
-                                    @if (!string.IsNullOrWhiteSpace(post.Caption))
-                                    {
-                                        <div class="text-sm text-instagram-text-primary-light dark:text-instagram-text-primary-dark">
-                                            <a href="/profile/@post.Username" class="font-semibold hover:text-gray-600 dark:hover:text-gray-400">@post.Username</a>
-                                            <span class="ml-1">@post.Caption</span>
-                                        </div>
-                                    }
-
-                                    <!-- Comments Count -->
-                                    @if (post.CommentsCount > 0)
-                                    {
-                                        <button @onclick="() => NavigateToPost(post.Id)" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
-                                            View all @post.CommentsCount @(post.CommentsCount == 1 ? "comment" : "comments")
-                                        </button>
-                                    }
-
-                                    <!-- Time Ago -->
-                                    <div class="text-xs text-gray-500 dark:text-gray-400">
-                                        @GetTimeAgo(post.CreatedAt)
-                                    </div>
-                                </div>
+                        <!-- Loading More Indicator -->
+                        @if (isLoadingMore)
+                        {
+                            <div class="text-center text-gray-600 dark:text-gray-400 py-8">
+                                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-instagram-blue mx-auto"></div>
+                                <p class="mt-2 text-sm">Loading more...</p>
+                            </div>
+                        }
+                        else if (!hasMore)
+                        {
+                            <div class="text-center text-gray-500 dark:text-gray-400 py-8 text-sm">
+                                You've reached the end!
                             </div>
                         }
                     </div>
-
-                    <!-- Loading More Indicator -->
-                    @if (isLoadingMore)
-                    {
-                        <div class="text-center text-gray-600 dark:text-gray-400 py-8">
-                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-instagram-blue mx-auto"></div>
-                            <p class="mt-2 text-sm">Loading more...</p>
-                        </div>
-                    }
-                    else if (!hasMore)
-                    {
-                        <div class="text-center text-gray-500 dark:text-gray-400 py-8 text-sm">
-                            You've reached the end!
-                        </div>
-                    }
                 }
             </Authorized>
             <NotAuthorized>
-                <div class="text-center">
+                <div class="text-center max-w-md mx-auto">
                     <h1 class="text-5xl font-bold mb-2 bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 bg-clip-text text-transparent">
                         @UI.Home_Welcome
                     </h1>
@@ -148,22 +86,9 @@
     </div>
 </div>
 
-@code {
-    private string GetTimeAgo(DateTime dateTime)
-    {
-        var timeSpan = DateTime.UtcNow - dateTime;
-        
-        if (timeSpan.TotalMinutes < 1)
-            return "just now";
-        if (timeSpan.TotalMinutes < 60)
-            return $"{(int)timeSpan.TotalMinutes}m ago";
-        if (timeSpan.TotalHours < 24)
-            return $"{(int)timeSpan.TotalHours}h ago";
-        if (timeSpan.TotalDays < 7)
-            return $"{(int)timeSpan.TotalDays}d ago";
-        if (timeSpan.TotalDays < 30)
-            return $"{(int)(timeSpan.TotalDays / 7)}w ago";
-        
-        return dateTime.ToString("MMM d");
-    }
-}
+<!-- Comments Modal -->
+<CommentsModal 
+    IsOpen="@isCommentsModalOpen"
+    Post="@selectedPost"
+    OnClose="@CloseComments"
+    OnPostLikeToggle="@(() => ToggleLike(selectedPost!))" />

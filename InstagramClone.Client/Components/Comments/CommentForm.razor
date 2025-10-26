@@ -1,0 +1,63 @@
+@* Reusable Comment Form Component *@
+@using InstagramClone.Client.Resources
+
+<div class="border-t border-gray-300 dark:border-gray-800 px-4 py-3">
+    <div class="flex items-center space-x-3">
+        <svg class="w-6 h-6 text-black dark:text-white flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <input 
+            type="text" 
+            placeholder="@Placeholder"
+            class="flex-1 bg-transparent text-sm text-black dark:text-white placeholder-gray-500 focus:outline-none"
+            @bind="commentInput"
+            @bind:event="oninput"
+            @onkeydown="HandleKeyDown" />
+        <button 
+            @onclick="HandleSubmit" 
+            class="text-instagram-blue font-semibold text-sm disabled:opacity-30 transition-opacity"
+            disabled="@(string.IsNullOrWhiteSpace(commentInput))">
+            @UI.Common_Post
+        </button>
+    </div>
+    @if (!string.IsNullOrWhiteSpace(ReplyingTo))
+    {
+        <div class="flex items-center justify-between mt-2 text-xs text-gray-500">
+            <span>@UI.Common_Reply @UI.Common_To <span class="font-semibold">@ReplyingTo</span></span>
+            <button @onclick="OnCancelReply" class="text-instagram-blue hover:text-blue-700">
+                @UI.Common_Cancel
+            </button>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public string Placeholder { get; set; } = string.Empty;
+    [Parameter] public string? ReplyingTo { get; set; }
+    [Parameter] public EventCallback<string> OnSubmit { get; set; }
+    [Parameter] public EventCallback OnCancelReply { get; set; }
+
+    private string commentInput = string.Empty;
+
+    private async Task HandleSubmit()
+    {
+        if (string.IsNullOrWhiteSpace(commentInput))
+            return;
+
+        await OnSubmit.InvokeAsync(commentInput);
+        commentInput = string.Empty;
+    }
+
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !string.IsNullOrWhiteSpace(commentInput))
+        {
+            await HandleSubmit();
+        }
+        else if (e.Key == "Escape" && !string.IsNullOrWhiteSpace(ReplyingTo))
+        {
+            await OnCancelReply.InvokeAsync();
+        }
+    }
+}
+

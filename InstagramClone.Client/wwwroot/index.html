@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
     <meta charset="utf-8" />
@@ -20,11 +20,13 @@
             set: function (value) { localStorage.setItem(this.key, value); },
             apply: function (value) {
                 var lang = value || this.get() || 'en';
-                document.documentElement.lang = lang;
+                // Set lang attribute on html element
+                document.documentElement.setAttribute('lang', lang);
+                // Set dir (direction) for RTL languages
                 document.documentElement.dir = lang && lang.toLowerCase().startsWith('ar') ? 'rtl' : 'ltr';
             }
         };
-        // Apply as early as possible to avoid FOUC
+        // Apply as early as possible to avoid FOUC and set lang/dir
         window.blazorCulture.apply();
 
         // Theme management
@@ -86,7 +88,18 @@
             window.addEventListener('unhandledrejection', function(e){ show('Unhandled: ' + (e?.reason?.message || e?.reason || 'Unknown promise rejection')); });
         })();
     </script>
-    <script src="_framework/blazor.webassembly.js"></script>
+    <script src="_framework/blazor.webassembly.js" autostart="false"></script>
+    <script>
+        // Configure Blazor to use the saved culture before startup
+        (function() {
+            var culture = localStorage.getItem('culture') || 'en';
+            console.log('[Blazor Startup] Using culture:', culture);
+            
+            Blazor.start({
+                applicationCulture: culture
+            });
+        })();
+    </script>
 </body>
 
 </html>

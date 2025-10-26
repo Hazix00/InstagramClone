@@ -57,5 +57,23 @@
   <data name="Home_LoadingFeed" xml:space="preserve"><value>Chargement du fil...</value></data>
   <data name="Home_NoPosts" xml:space="preserve"><value>Aucune publication pour le moment.</value></data>
   <data name="Home_CreateOne" xml:space="preserve"><value>Créer une</value></data>
+  <data name="Home_LoadingMore" xml:space="preserve"><value>Chargement de plus...</value></data>
+  <data name="PostCard_ViewAllComments" xml:space="preserve"><value>Voir tout</value></data>
+  <data name="PostCard_AddComment" xml:space="preserve"><value>Ajouter un commentaire...</value></data>
+  <data name="CommentForm_AddComment" xml:space="preserve"><value>Ajouter un commentaire...</value></data>
+  <data name="CommentForm_ReplyTo" xml:space="preserve"><value>Répondre à {0}...</value></data>
+  <data name="CommentItem_ViewReplies" xml:space="preserve"><value>Voir les réponses</value></data>
+  <data name="CommentsModal_Comments" xml:space="preserve"><value>Commentaires</value></data>
+  <data name="CommentsModal_LoadingComments" xml:space="preserve"><value>Chargement des commentaires...</value></data>
+  <data name="CommentsModal_NoComments" xml:space="preserve"><value>Aucun commentaire pour le moment. Soyez le premier à commenter !</value></data>
+  <data name="CommentsModal_LoadingMore" xml:space="preserve"><value>Chargement de plus de commentaires...</value></data>
+  <data name="Theme_Toggle" xml:space="preserve"><value>Basculer le thème</value></data>
+  <data name="Common_Post" xml:space="preserve"><value>Publier</value></data>
+  <data name="Common_Reply" xml:space="preserve"><value>Répondre</value></data>
+  <data name="Common_To" xml:space="preserve"><value>à</value></data>
+  <data name="Common_Like" xml:space="preserve"><value>j'aime</value></data>
+  <data name="Common_Likes" xml:space="preserve"><value>j'aime</value></data>
+  <data name="Common_Comment" xml:space="preserve"><value>commentaire</value></data>
+  <data name="Common_Comments" xml:space="preserve"><value>commentaires</value></data>
 </root>
 

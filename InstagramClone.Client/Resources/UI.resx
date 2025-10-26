@@ -171,5 +171,59 @@
   <data name="Home_CreateOne" xml:space="preserve">
     <value>Create one</value>
   </data>
+  <data name="Home_LoadingMore" xml:space="preserve">
+    <value>Loading more...</value>
+  </data>
+  <data name="PostCard_ViewAllComments" xml:space="preserve">
+    <value>View all</value>
+  </data>
+  <data name="PostCard_AddComment" xml:space="preserve">
+    <value>Add a comment...</value>
+  </data>
+  <data name="CommentForm_AddComment" xml:space="preserve">
+    <value>Add a comment...</value>
+  </data>
+  <data name="CommentForm_ReplyTo" xml:space="preserve">
+    <value>Reply to {0}...</value>
+  </data>
+  <data name="CommentItem_ViewReplies" xml:space="preserve">
+    <value>View replies</value>
+  </data>
+  <data name="CommentsModal_Comments" xml:space="preserve">
+    <value>Comments</value>
+  </data>
+  <data name="CommentsModal_LoadingComments" xml:space="preserve">
+    <value>Loading comments...</value>
+  </data>
+  <data name="CommentsModal_NoComments" xml:space="preserve">
+    <value>No comments yet. Be the first to comment!</value>
+  </data>
+  <data name="CommentsModal_LoadingMore" xml:space="preserve">
+    <value>Loading more comments...</value>
+  </data>
+  <data name="Theme_Toggle" xml:space="preserve">
+    <value>Toggle theme</value>
+  </data>
+  <data name="Common_Post" xml:space="preserve">
+    <value>Post</value>
+  </data>
+  <data name="Common_Reply" xml:space="preserve">
+    <value>Reply</value>
+  </data>
+  <data name="Common_To" xml:space="preserve">
+    <value>to</value>
+  </data>
+  <data name="Common_Like" xml:space="preserve">
+    <value>like</value>
+  </data>
+  <data name="Common_Likes" xml:space="preserve">
+    <value>likes</value>
+  </data>
+  <data name="Common_Comment" xml:space="preserve">
+    <value>comment</value>
+  </data>
+  <data name="Common_Comments" xml:space="preserve">
+    <value>comments</value>
+  </data>
 </root>
 

@@ -1,8 +1,9 @@
 @inject IJSRuntime JS
+@using InstagramClone.Client.Resources
 
 <button @onclick="ToggleTheme" 
         class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-        title="Toggle theme">
+        title="@UI.Theme_Toggle">
     @if (IsDark)
     {
         <!-- Sun icon for light mode -->

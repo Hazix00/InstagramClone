@@ -71,6 +71,30 @@ public static class UI
     public static string Home_LoadingFeed => Get(nameof(Home_LoadingFeed), "Loading feed...");
     public static string Home_NoPosts => Get(nameof(Home_NoPosts), "No posts yet.");
     public static string Home_CreateOne => Get(nameof(Home_CreateOne), "Create one");
+    public static string Home_LoadingMore => Get(nameof(Home_LoadingMore), "Loading more...");
+
+    public static string PostCard_ViewAllComments => Get(nameof(PostCard_ViewAllComments), "View all");
+    public static string PostCard_AddComment => Get(nameof(PostCard_AddComment), "Add a comment...");
+
+    public static string CommentForm_AddComment => Get(nameof(CommentForm_AddComment), "Add a comment...");
+    public static string CommentForm_ReplyTo => Get(nameof(CommentForm_ReplyTo), "Reply to {0}...");
+
+    public static string CommentItem_ViewReplies => Get(nameof(CommentItem_ViewReplies), "View replies");
+
+    public static string CommentsModal_Comments => Get(nameof(CommentsModal_Comments), "Comments");
+    public static string CommentsModal_LoadingComments => Get(nameof(CommentsModal_LoadingComments), "Loading comments...");
+    public static string CommentsModal_NoComments => Get(nameof(CommentsModal_NoComments), "No comments yet. Be the first to comment!");
+    public static string CommentsModal_LoadingMore => Get(nameof(CommentsModal_LoadingMore), "Loading more comments...");
+
+    public static string Theme_Toggle => Get(nameof(Theme_Toggle), "Toggle theme");
+
+    public static string Common_Post => Get(nameof(Common_Post), "Post");
+    public static string Common_Reply => Get(nameof(Common_Reply), "Reply");
+    public static string Common_To => Get(nameof(Common_To), "to");
+    public static string Common_Like => Get(nameof(Common_Like), "like");
+    public static string Common_Likes => Get(nameof(Common_Likes), "likes");
+    public static string Common_Comment => Get(nameof(Common_Comment), "comment");
+    public static string Common_Comments => Get(nameof(Common_Comments), "comments");
 }
 
 

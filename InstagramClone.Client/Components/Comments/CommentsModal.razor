@@ -1,0 +1,130 @@
+@using InstagramClone.Core.DTOs
+@inject InstagramClone.Client.Services.CommentService CommentService
+
+@if (IsOpen && Post != null)
+{
+    <!-- Modal Overlay -->
+    <div class="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4" @onclick="Close">
+        <!-- Modal Content -->
+        <div class="bg-white dark:bg-black rounded-lg max-w-5xl w-full max-h-[90vh] flex overflow-hidden" @onclick:stopPropagation="true">
+            <!-- Left: Image -->
+            <div class="hidden md:flex md:w-3/5 bg-black items-center justify-center">
+                <img src="@Post.ImageUrl" alt="post" class="max-w-full max-h-[90vh] object-contain" />
+            </div>
+
+            <!-- Right: Comments -->
+            <div class="w-full md:w-2/5 flex flex-col max-h-[90vh]">
+                <!-- Header -->
+                <div class="flex items-center justify-between px-4 py-3 border-b border-gray-300 dark:border-gray-800">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 to-pink-600 p-[2px]">
+                            <div class="w-full h-full rounded-full bg-white dark:bg-black flex items-center justify-center">
+                                <span class="text-xs font-semibold text-gray-700 dark:text-gray-300">@Post.Username[0].ToString().ToUpper()</span>
+                            </div>
+                        </div>
+                        <a href="/profile/@Post.Username" class="font-semibold text-sm text-black dark:text-white">
+                            @Post.Username
+                        </a>
+                    </div>
+                    <button @onclick="Close" class="text-black dark:text-white hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Comments List (Scrollable) -->
+                <div class="flex-1 overflow-y-auto px-4 py-3">
+                    <!-- Caption as first comment -->
+                    @if (!string.IsNullOrWhiteSpace(Post.Caption))
+                    {
+                        <div class="flex items-start space-x-3 pb-4 border-b border-gray-200 dark:border-gray-800 mb-4">
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 to-pink-600 p-[2px] flex-shrink-0">
+                                <div class="w-full h-full rounded-full bg-white dark:bg-black flex items-center justify-center">
+                                    <span class="text-xs font-semibold text-gray-700 dark:text-gray-300">@Post.Username[0].ToString().ToUpper()</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div>
+                                    <a href="/profile/@Post.Username" class="font-semibold text-sm text-black dark:text-white">@Post.Username</a>
+                                    <span class="text-sm text-black dark:text-white ml-2">@Post.Caption</span>
+                                </div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                    @GetTimeAgo(Post.CreatedAt)
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Loading State -->
+                    @if (isLoadingComments)
+                    {
+                        <div class="text-center py-8 text-gray-500">
+                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-instagram-blue mx-auto"></div>
+                            <p class="mt-2 text-sm">Loading comments...</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- Comments -->
+                        @foreach (var comment in comments)
+                        {
+                            <CommentItem 
+                                Comment="@comment" 
+                                OnLikeToggle="@(() => ToggleCommentLike(comment))"
+                                OnReply="@(() => StartReply(comment))"
+                                OnViewReplies="@(() => LoadReplies(comment.Id))"
+                                ShowReplies="@expandedReplies.Contains(comment.Id)" />
+
+                            <!-- Replies -->
+                            @if (expandedReplies.Contains(comment.Id) && repliesByComment.ContainsKey(comment.Id))
+                            {
+                                @foreach (var reply in repliesByComment[comment.Id])
+                                {
+                                    <CommentItem 
+                                        Comment="@reply" 
+                                        IsReply="true"
+                                        OnLikeToggle="@(() => ToggleCommentLike(reply))" />
+                                }
+                            }
+                        }
+
+                        @if (comments.Count == 0)
+                        {
+                            <div class="text-center py-8 text-gray-500">
+                                <p class="text-sm">No comments yet</p>
+                                <p class="text-xs mt-1">Be the first to comment</p>
+                            </div>
+                        }
+                    }
+                </div>
+
+                <!-- Post Actions -->
+                <div class="border-t border-gray-300 dark:border-gray-800 px-4 py-3">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center space-x-4">
+                            <LikeButton IsLiked="@Post.IsLikedByCurrentUser" OnToggle="@OnPostLikeToggle" />
+                        </div>
+                    </div>
+                    @if (Post.LikesCount > 0)
+                    {
+                        <div class="font-semibold text-sm text-black dark:text-white mb-2">
+                            @Post.LikesCount @(Post.LikesCount == 1 ? UI.Common_Like : UI.Common_Likes)
+                        </div>
+                    }
+                    <div class="text-xs text-gray-500 dark:text-gray-400 uppercase">
+                        @GetTimeAgo(Post.CreatedAt)
+                    </div>
+                </div>
+
+                <!-- Comment Form -->
+                <CommentForm 
+                    Placeholder="@(replyingTo != null ? string.Format(UI.CommentForm_ReplyTo, replyingTo.Username) : UI.CommentForm_AddComment)"
+                    ReplyingTo="@replyingTo?.Username"
+                    OnSubmit="@AddComment"
+                    OnCancelReply="@CancelReply" />
+            </div>
+        </div>
+    </div>
+}
+
